@@ -1,0 +1,98 @@
+/* styles pour les nouvelles tables de gestion de stock */
+.inventory-section,
+.stock-list-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.inventory-section h3,
+.stock-list-section h3 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.stock-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stock-table th {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.stock-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-ok {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.loading-row {
+    text-align: center;
+    padding: 40px !important;
+    color: #6c757d;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px !important;
+    color: #6c757d;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+.btn-outline:hover {
+    background: #f8f9fa;
+    border-color: #bbb;
+}
+
+.btn-modifier:hover {
+    color: #2575fc;
+    border-color: #2575fc;
+}
+
+.btn-supprimer:hover {
+    color: #e74c3c;
+    border-color: #e74c3c;
+}

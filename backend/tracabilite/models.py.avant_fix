@@ -1,0 +1,133 @@
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+class MouvementStock(models.Model):
+    """Correspond à tracabilite_mouvementstock"""
+    
+    class TypeMouvement(models.TextChoices):
+        ENTREE = 'ENTREE', _('Entrée')
+        SORTIE = 'SORTIE', _('Sortie')
+        TRANSFERT = 'TRANSFERT', _('Transfert')
+        AJUSTEMENT = 'AJUSTEMENT', _('Ajustement')
+    
+    id_mouvement = models.IntegerField(
+        primary_key=True,
+        db_column='ID_mouvement',
+        verbose_name=_('ID Mouvement')
+    )
+    
+    date_mouvement = models.DateField(
+        db_column='Date_mouvement',
+        verbose_name=_('Date du mouvement')
+    )
+    
+    type_mouvement = models.CharField(
+        max_length=50,
+        db_column='Type_mouvement',
+        choices=TypeMouvement.choices,
+        verbose_name=_('Type de mouvement')
+    )
+    
+    quantite = models.IntegerField(
+        db_column='Quantite',
+        verbose_name=_('Quantité')
+    )
+    
+   lot = models.ForeignKey(
+        'produits.Lot',
+        on_delete=models.CASCADE,
+        db_column='ID_lot'
+    )    
+    
+    utilisateur = models.ForeignKey(
+        'users.Utilisateur',
+        on_delete=models.SET_NULL,
+        db_column='ID_utilisateur',
+        null=True,
+        blank=True
+    )
+    
+    class Meta:
+        db_table = 'tracabilite_mouvementstock'
+        managed = False
+        verbose_name = _('Mouvement de stock')
+        verbose_name_plural = _('Mouvements de stock')
+        ordering = ['-date_mouvement']
+    
+    def __str__(self):
+        return f"{self.get_type_mouvement_display()} - Lot {self.id_lot}"
+
+class Alerte(models.Model):
+    """Correspond à tracabilite_alerte"""
+    
+    class TypeAlerte(models.TextChoices):
+        PEREMPTION = 'PEREMPTION', _('Péremption')
+        STOCK_BAS = 'STOCK_BAS', _('Stock bas')
+        STOCK_CRITIQUE = 'STOCK_CRITIQUE', _('Stock critique')
+        TEMPERATURE = 'TEMPERATURE', _('Température')
+        QUALITE = 'QUALITE', _('Qualité')
+    
+    class NiveauAlerte(models.IntegerChoices):
+        INFO = 1, _('Information')
+        ATTENTION = 2, _('Attention')
+        URGENT = 3, _('Urgent')
+        CRITIQUE = 4, _('Critique')
+    
+    id_alerte = models.IntegerField(
+        primary_key=True,
+        db_column='ID_alerte',
+        verbose_name=_('ID Alerte')
+    )
+    
+    type_alerte = models.CharField(
+        max_length=50,
+        db_column='Type_alerte',
+        choices=TypeAlerte.choices,
+        verbose_name=_('Type d\'alerte')
+    )
+    
+    date_creation = models.DateField(
+        db_column='Date_creation',
+        verbose_name=_('Date de création')
+    )
+    
+    niveau = models.IntegerField(
+        db_column='Niveau',
+        choices=NiveauAlerte.choices,
+        verbose_name=_('Niveau'),
+        default=NiveauAlerte.INFO
+    )
+    
+    message = models.TextField(
+        db_column='Message',
+        verbose_name=_('Message'),
+        blank=True
+    )
+    
+   lot = models.ForeignKey(
+        'produits.Lot',
+        on_delete=models.CASCADE,
+        db_column='ID_lot',
+        null=True,
+        blank=True
+    )
+    
+    class Meta:
+        db_table = 'tracabilite_alerte'
+        managed = False
+        verbose_name = _('Alerte')
+        verbose_name_plural = _('Alertes')
+        ordering = ['-date_creation']
+    
+    def __str__(self):
+        return f"Alerte {self.id_alerte} - {self.get_type_alerte_display()}"
+    
+    def get_niveau_display_color(self):
+        """Retourne une couleur CSS selon le niveau"""
+        colors = {
+            1: 'info',      # Bleu
+            2: 'warning',   # Jaune
+            3: 'danger',    # Rouge
+            4: 'dark',      # Noir
+        }
+        return colors.get(self.niveau, 'secondary')

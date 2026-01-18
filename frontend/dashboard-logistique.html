@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Logistique - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><i class="fas fa-truck"></i>
+                    <h2>Mokpokpo Log.</h2>
+                </div>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="dashboard-logistique.html" class="menu-item active"><i
+                        class="fas fa-tachometer-alt menu-icon"></i> <span>Tableau de bord</span></a>
+                <a href="livraisons.html" class="menu-item"><i class="fas fa-calendar-alt menu-icon"></i>
+                    <span>Planification</span></a>
+                <a href="livraisons.html?view=suivi" class="menu-item"><i class="fas fa-route menu-icon"></i>
+                    <span>Suivi</span></a>
+                <a href="incidents.html" class="menu-item"><i class="fas fa-exclamation-triangle menu-icon"></i>
+                    <span>Incidents</span></a>
+                <a href="notifications.html" class="menu-item"><i class="fas fa-envelope menu-icon"></i>
+                    <span>Notifications</span></a>
+                <div class="menu-spacer"></div>
+                <a href="#" class="menu-item logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt menu-icon"></i>
+                    <span>Déconnexion</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-title">
+                    <h1>Vue générale logistique</h1>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-name">Gestionnaire Logistique</div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Livraisons aujourd'hui</h3>
+                            <div class="stat-icon orange"><i class="fas fa-truck"></i></div>
+                        </div>
+                        <div class="stat-value" id="stats-today">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Incidents ouverts</h3>
+                            <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+                        </div>
+                        <div class="stat-value" id="stats-incidents">0</div>
+                    </div>
+                </div>
+
+                <div class="critical-stocks" style="margin-top: 30px;">
+                    <h3><i class="fas fa-clock"></i> Livraisons en cours</h3>
+                    <div class="stocks-list" id="deliveries-list">
+                        <div class="loading-item">Chargement...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('logout-btn').addEventListener('click', () => { localStorage.clear(); window.location.href = 'login.html'; });
+            loadStats();
+        });
+        async function loadStats() {
+            try {
+                const deliveries = await api.getDeliveries();
+                document.getElementById('stats-today').textContent = deliveries.length;
+                const list = document.getElementById('deliveries-list');
+                if (deliveries.length === 0) { list.innerHTML = '<div class="no-data">Aucune livraison en cours</div>'; return; }
+                list.innerHTML = deliveries.map(d => `
+                    <div class="stock-item">
+                        <div class="stock-info">
+                            <strong>${d.destination}</strong>
+                            <span>Responsable: ${d.responsable || 'N/A'}</span>
+                        </div>
+                        <div class="stock-badge badge ${d.statut_livraison === 'Livré' ? 'badge-success' : 'badge-warning'}">
+                            ${d.statut_livraison}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { }
+        }
+    </script>
+</body>
+
+</html>

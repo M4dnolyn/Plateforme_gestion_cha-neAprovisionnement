@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Ventes - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/stock.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-fish"></i>
+                    <h1>Ferme Mokpokpo</h1>
+                </div>
+                <div class="user-info">
+                    <span id="current-user">Gestionnaire Ventes</span>
+                    <button class="btn btn-sm btn-outline" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </button>
+                </div>
+            </div>
+
+            <nav class="main-nav">
+                <a href="dashboard-ventes.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="catalogue.html" class="nav-link">
+                    <i class="fas fa-fish"></i> Catalogue
+                </a>
+                <a href="ventes.html" class="nav-link active">
+                    <i class="fas fa-shopping-cart"></i> Ventes
+                </a>
+                <a href="notifications.html" class="nav-link">
+                    <i class="fas fa-envelope"></i> Notifications
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="stock-container">
+        <div class="stock-header">
+            <h1><i class="fas fa-shopping-cart"></i> Enregistrer une Vente</h1>
+        </div>
+
+        <section class="form-section">
+            <form id="saleForm" class="stock-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="produit_select">Produit</label>
+                        <select id="produit_select" required>
+                            <option value="">Chargement des produits...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lot_select">Lot disponible</label>
+                        <select id="lot_select" required>
+                            <option value="">Sélectionnez un produit d'abord</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantite">Quantité à vendre (kg)</label>
+                        <input type="number" id="quantite" step="0.1" required min="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="prix_unitaire">Prix unitaire (CFA/kg)</label>
+                        <input type="number" id="prix_unitaire" required min="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="client">Client</label>
+                        <input type="text" id="client" placeholder="Nom du client">
+                    </div>
+                    <div class="form-group">
+                        <label for="statut_vente">Statut</label>
+                        <select id="statut_vente">
+                            <option value="Complete">Payée</option>
+                            <option value="Pending">En attente de paiement</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Valider la vente
+                    </button>
+                    <button type="reset" class="btn btn-secondary">Annuler</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="stock-list-section">
+            <h3><i class="fas fa-history"></i> Historique des Ventes</h3>
+            <div class="table-container">
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Facture</th>
+                            <th>Date</th>
+                            <th>Produit</th>
+                            <th>Qté</th>
+                            <th>Total (CFA)</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-history-body">
+                        <tr>
+                            <td colspan="6" class="loading-row">
+                                <i class="fas fa-spinner fa-spin"></i> Chargement de l'historique...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/ventes.js"></script>
+</body>
+
+</html>

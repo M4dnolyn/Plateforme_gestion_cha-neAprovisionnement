@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Gestionnaire - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- Font Awesome & Chart.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- IMPORTANT : Ajouter config.js pour les URLs API -->
+  <script src="js/config.js"></script>
+</head>
+
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <i class="fas fa-fish"></i>
+          <h2>Ferme Mokpokpo</h2>
+        </div>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="dashboard-gestionnaire.html" class="menu-item active">
+          <i class="fas fa-tachometer-alt menu-icon"></i>
+          <span class="menu-text">Tableau de bord</span>
+        </a>
+        <a href="catalogue.html" class="menu-item">
+          <i class="fas fa-fish menu-icon"></i>
+          <span class="menu-text">Catalogue</span>
+        </a>
+        <a href="stock.html" class="menu-item">
+          <i class="fas fa-boxes menu-icon"></i>
+          <span class="menu-text">Stocks</span>
+        </a>
+        <a href="livraisons.html" class="menu-item">
+          <!-- CHANGÉ : Lien réel -->
+          <i class="fas fa-truck menu-icon"></i>
+          <span class="menu-text">Livraisons</span>
+        </a>
+        <a href="ventes.html" class="menu-item">
+          <!-- CHANGÉ : Lien réel -->
+          <i class="fas fa-chart-line menu-icon"></i>
+          <span class="menu-text">Ventes</span>
+        </a>
+
+        <div class="menu-spacer"></div>
+
+        <a href="#" class="menu-item logout-btn" id="logout-btn">
+          <!-- CHANGÉ : ID ajouté -->
+          <i class="fas fa-sign-out-alt menu-icon"></i>
+          <span class="menu-text">Déconnexion</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Topbar -->
+      <!-- Topbar -->
+      <header class="topbar">
+        <button class="toggle-sidebar" id="toggle-sidebar" aria-label="Ouvrir/Fermer le menu">
+          <i class="fas fa-bars"></i>
+          <span class="sr-only">Ouvrir/Fermer le menu</span>
+        </button>
+
+        <div class="topbar-title">
+          <h1>Tableau de bord Gestionnaire</h1>
+        </div>
+
+        <div class="user-info">
+          <div class="user-details">
+            <div class="user-name" id="manager-name">Chargement...</div>
+            <div class="user-role" id="manager-role">
+              Gestionnaire de Stock
+            </div>
+          </div>
+          <div class="user-avatar" aria-label="Avatar de l'utilisateur">
+            <i class="fas fa-user-tie" aria-hidden="true"></i>
+          </div>
+        </div>
+      </header>
+      <!-- ← BALISE DE FERMETURE AJOUTÉE ICI -->
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <!-- Message d'erreur si non connecté -->
+        <div id="auth-error" style="display: none" class="alert alert-danger">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Vous devez être connecté pour accéder au dashboard.
+            Redirection...</span>
+        </div>
+
+        <div id="dashboard-content">
+          <div class="welcome-section">
+            <h2>Bienvenue, <span id="welcome-name">Chargement...</span> !</h2>
+            <p class="subtitle">
+              Gestion des stocks et produits - <span id="current-date"></span>
+            </p>
+          </div>
+
+          <!-- Statistiques -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <h3>Stocks disponibles</h3>
+                <div class="stat-icon blue">
+                  <i class="fas fa-boxes"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="total-stock">0</div>
+              <div class="stat-label">Kg de produits</div>
+              <div class="stat-change">
+                <span id="stock-trend">Chargement...</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <h3>Alertes actives</h3>
+                <div class="stat-icon red">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="total-alerts">0</div>
+              <div class="stat-label">À traiter</div>
+              <div class="stat-change">
+                <span id="alerts-trend"></span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <h3>Livraisons aujourd'hui</h3>
+                <div class="stat-icon orange">
+                  <i class="fas fa-truck"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="today-deliveries">0</div>
+              <div class="stat-label">En transit</div>
+              <div class="stat-change">
+                <span id="deliveries-trend"></span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <h3>Produits en catalogue</h3>
+                <div class="stat-icon green">
+                  <i class="fas fa-fish"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="total-products">0</div>
+              <div class="stat-label">Types différents</div>
+              <div class="stat-change">
+                <span id="products-trend"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions rapides -->
+          <div class="quick-actions-section">
+            <h3>Actions rapides</h3>
+            <div class="actions-grid">
+              <a href="formulaire_stock.html" class="action-card">
+                <div class="action-icon">
+                  <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="action-content">
+                  <h4>Ajouter un stock</h4>
+                  <p>Enregistrer une nouvelle entrée de stock</p>
+                </div>
+              </a>
+
+              <a href="stock.html" class="action-card">
+                <div class="action-icon">
+                  <i class="fas fa-edit"></i>
+                </div>
+                <div class="action-content">
+                  <h4>Modifier stocks</h4>
+                  <p>Ajuster les niveaux de stock</p>
+                </div>
+              </a>
+
+              <a href="catalogue.html" class="action-card">
+                <div class="action-icon">
+                  <i class="fas fa-search"></i>
+                </div>
+                <div class="action-content">
+                  <h4>Consulter catalogue</h4>
+                  <p>Voir tous les produits disponibles</p>
+                </div>
+              </a>
+
+              <a href="commandes.html" class="action-card">
+                <!-- CHANGÉ : Lien réel -->
+                <div class="action-icon">
+                  <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="action-content">
+                  <h4>Gérer commandes</h4>
+                  <p>Suivre les commandes en cours</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Graphiques -->
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3>Évolution des stocks (7 jours)</h3>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="stockChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3>Répartition par catégorie</h3>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stocks critiques -->
+          <div class="critical-stocks">
+            <div class="section-header">
+              <h3>
+                <i class="fas fa-exclamation-circle"></i> Stocks critiques
+              </h3>
+              <span class="badge badge-danger" id="critical-count">0</span>
+            </div>
+            <div class="stocks-list" id="critical-stocks-list">
+              <div class="loading-item">
+                <i class="fas fa-spinner fa-spin"></i> Chargement des stocks
+                critiques...
+              </div>
+            </div>
+          </div>
+
+          <!-- Dernières activités -->
+          <div class="recent-activity">
+            <div class="activity-header">
+              <h3>Dernières activités</h3>
+            </div>
+            <div class="activity-list" id="recent-activities">
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">Chargement...</div>
+                  <div class="activity-details">
+                    Récupération des dernières activités
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Fin #dashboard-content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/security.js"></script>
+  <script src="js/auth.js"></script>
+  <!-- IMPORTANT : Ajouté -->
+  <script src="js/dashboard-gestionnaire.js"></script>
+
+  <script>
+    // Vérification d'authentification au chargement
+    document.addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem("access_token");
+      const userRole = localStorage.getItem("userRole");
+      const userName = localStorage.getItem("userName");
+
+      // Si non authentifié, rediriger
+      if (!token || !userRole) {
+        document.getElementById("auth-error").style.display = "block";
+        document.getElementById("dashboard-content").style.display = "none";
+
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+        return;
+      }
+
+      // Mettre à jour les infos utilisateur
+      if (userName) {
+        document.getElementById("manager-name").textContent = userName;
+        document.getElementById("welcome-name").textContent = userName;
+      }
+
+      // Mettre à jour le rôle
+      const roleDisplay = {
+        admin: "Administrateur",
+        gestionnaire_stock: "Gestionnaire de Stock",
+        gestionnaire_production: "Gestionnaire Production",
+        gestionnaire_logistique: "Gestionnaire Logistique",
+        gestionnaire_ventes: "Gestionnaire Ventes",
+      };
+      document.getElementById("manager-role").textContent =
+        roleDisplay[userRole] || userRole;
+
+      // Mettre à jour la date
+      const now = new Date();
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      document.getElementById("current-date").textContent =
+        now.toLocaleDateString("fr-FR", options);
+
+      // Gestion du logout
+      document
+        .getElementById("logout-btn")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+            // Appeler la fonction logout de auth.js
+            if (typeof logout === "function") {
+              logout();
+            } else {
+              localStorage.clear();
+              window.location.href = "login.html";
+            }
+          }
+        });
+
+      // Toggle sidebar
+      document
+        .getElementById("toggle-sidebar")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("collapsed");
+        });
+    });
+  </script>
+</body>
+
+</html>

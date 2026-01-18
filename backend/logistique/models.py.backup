@@ -1,0 +1,154 @@
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+class Entrepot(models.Model):
+    """Correspond à logistique_entrepot"""
+    
+    id_entrepot = models.IntegerField(
+        primary_key=True,
+        db_column='ID_entrepot',
+        verbose_name=_('ID Entrepôt')
+    )
+    
+    nom_entrepot = models.CharField(
+        max_length=100,
+        db_column='Nom_entrepot',
+        verbose_name=_('Nom de l\'entrepôt')
+    )
+    
+    localisation = models.CharField(
+        max_length=200,
+        db_column='Localisation',
+        verbose_name=_('Localisation'),
+        blank=True
+    )
+    
+    capacite = models.IntegerField(
+        db_column='Capacite',
+        verbose_name=_('Capacité (kg)'),
+        null=True,
+        blank=True
+    )
+    
+    class Meta:
+        db_table = 'logistique_entrepot'
+        managed = False
+        verbose_name = _('Entrepôt')
+        verbose_name_plural = _('Entrepôts')
+        ordering = ['nom_entrepot']
+    
+    def __str__(self):
+        return f"{self.nom_entrepot} ({self.localisation})"
+
+class CommandeAchat(models.Model):
+    """Correspond à logistique_commandeachat"""
+    
+    class StatutCommande(models.TextChoices):
+        EN_ATTENTE = 'ATTENTE', _('En attente')
+        VALIDE = 'VALIDE', _('Validée')
+        EN_COURS = 'COURS', _('En cours')
+        LIVREE = 'LIVREE', _('Livrée')
+        ANNULEE = 'ANNULEE', _('Annulée')
+    
+    id_commande = models.IntegerField(
+        primary_key=True,
+        db_column='ID_commande',
+        verbose_name=_('ID Commande')
+    )
+    
+    date_commande = models.DateField(
+        db_column='Date_Commande',
+        verbose_name=_('Date de commande')
+    )
+    
+    quantite_commande = models.IntegerField(
+        db_column='Quantite_Commande',
+        verbose_name=_('Quantité commandée')
+    )
+    
+    statut_commande = models.CharField(
+        max_length=50,
+        db_column='Statut_Commande',
+        choices=StatutCommande.choices,
+        verbose_name=_('Statut de la commande'),
+        default=StatutCommande.EN_ATTENTE
+    )
+    
+    fournisseur = models.CharField(
+        max_length=100,
+        db_column='Fournisseur',
+        verbose_name=_('Fournisseur'),
+        blank=True
+    )
+    
+      entrepot = models.ForeignKey(
+        'logistique.Entrepot',
+        on_delete=models.CASCADE,
+        db_column='ID_entrepot'
+    )
+    
+    class Meta:
+        db_table = 'logistique_commandeachat'
+        managed = False
+        verbose_name = _('Commande d\'achat')
+        verbose_name_plural = _('Commandes d\'achat')
+        ordering = ['-date_commande']
+    
+    def __str__(self):
+        return f"Commande {self.id_commande} - {self.fournisseur}"
+
+class Livraison(models.Model):
+    """Correspond à logistique_livraison"""
+    
+    class StatutLivraison(models.TextChoices):
+        PLANIFIEE = 'PLANIFIEE', _('Planifiée')
+        EN_PREPARATION = 'PREPA', _('En préparation')
+        EN_ROUTE = 'ROUTE', _('En route')
+        LIVREE = 'LIVREE', _('Livrée')
+        RETARD = 'RETARD', _('Retardée')
+        ANNULEE = 'ANNULEE', _('Annulée')
+    
+    id_livraison = models.IntegerField(
+        primary_key=True,
+        db_column='ID_livraison',
+        verbose_name=_('ID Livraison')
+    )
+    
+    date_livraison = models.DateField(
+        db_column='date_livraison',
+        verbose_name=_('Date de livraison'),
+        null=True,
+        blank=True
+    )
+    
+    statut_livraison = models.CharField(
+        max_length=50,
+        db_column='statut_Livraison',
+        choices=StatutLivraison.choices,
+        verbose_name=_('Statut de la livraison'),
+        default=StatutLivraison.PLANIFIEE
+    )
+    
+    destination = models.CharField(
+        max_length=200,
+        db_column='destination',
+        verbose_name=_('Destination'),
+        blank=True
+    )
+    
+ lot = models.ForeignKey(
+        'produits.Lot',
+        on_delete=models.CASCADE,
+        db_column='ID_lot',
+        null=True,  # Si la colonne peut être NULL
+        blank=True
+    )
+    class Meta:
+        db_table = 'logistique_livraison'
+        managed = False
+        verbose_name = _('Livraison')
+        verbose_name_plural = _('Livraisons')
+        ordering = ['-date_livraison']
+    
+    def __str__(self):
+        return f"Livraison {self.id_livraison} - {self.destination}"

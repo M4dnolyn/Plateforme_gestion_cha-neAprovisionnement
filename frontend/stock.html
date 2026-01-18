@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Stocks - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/stock.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-fish"></i>
+                    <h1>Ferme Mokpokpo</h1>
+                </div>
+                <div class="user-info">
+                    <span id="current-user">Gestionnaire de Stock</span>
+                    <button class="btn btn-sm btn-outline" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </button>
+                </div>
+            </div>
+
+            <nav class="main-nav" id="sidebar-nav">
+                <!-- Contenu généré par rôle ou statique pour le rôle principal de la page -->
+                <a href="catalogue.html" class="nav-link">
+                    <i class="fas fa-fish"></i> Catalogue
+                </a>
+                <a href="stock.html" class="nav-link active">
+                    <i class="fas fa-boxes"></i> Stock
+                </a>
+                <a href="alertes.html" class="nav-link">
+                    <i class="fas fa-bell"></i> Alertes
+                </a>
+                <a href="notifications.html" class="nav-link">
+                    <i class="fas fa-envelope"></i> Notifications
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="stock-container">
+        <div class="stock-header">
+            <h1><i class="fas fa-boxes"></i> Gestion des Stocks</h1>
+        </div>
+
+        <div class="inventory-section">
+            <h3><i class="fas fa-calendar-alt"></i> Inventaire du jour</h3>
+            <div class="table-container">
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Stock Entrée (kg)</th>
+                            <th>Stock Sortis (kg)</th>
+                            <th>Disponible (kg)</th>
+                            <th>Rupture</th>
+                        </tr>
+                    </thead>
+                    <tbody id="daily-inventory-body">
+                        <tr>
+                            <td colspan="5" class="loading-row">
+                                <i class="fas fa-spinner fa-spin"></i> Chargement de l'inventaire...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <button class="btn-ajouter" onclick="window.location.href='formulaire_stock.html'">
+                <i class="fas fa-plus-circle"></i> + Ajouter un stock
+            </button>
+        </div>
+
+        <div class="stock-list-section">
+            <h3><i class="fas fa-history"></i> Historique de stocks</h3>
+            <div class="table-container">
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Stock (ID)</th>
+                            <th>Type</th>
+                            <th>Quantité (kg)</th>
+                            <th>Entrée</th>
+                            <th>Disponibilité</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stock-history-body">
+                        <tr>
+                            <td colspan="6" class="loading-row">
+                                <i class="fas fa-spinner fa-spin"></i> Chargement de l'historique...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section Historique complète supprimée au profit de la table ci-dessus -->
+        <div class="actions-footer" style="margin-top: 20px; text-align: center;">
+            <button class="btn btn-primary" onclick="loadStockData()">
+                <i class="fas fa-sync"></i> Actualiser les données
+            </button>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/stock.js"></script>
+</body>
+
+</html>

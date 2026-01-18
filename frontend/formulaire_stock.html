@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouveau Stock - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/formulaire.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="form-page-container">
+        <div class="form-header">
+            <a href="stock.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Retour aux stocks
+            </a>
+            <h1><i class="fas fa-box-open"></i> Nouveau Stock</h1>
+        </div>
+        
+        <div class="form-container">
+            <form id="stockForm">
+                <div class="form-group">
+                    <label for="numero_stock">
+                        <i class="fas fa-hashtag"></i> Numéro du stock
+                    </label>
+                    <input type="text" id="numero_stock" name="numero_stock" 
+                           placeholder="STK-2026-001" required>
+                    <small class="form-help">Format: STK-ANNEE-SEQUENCE</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categorie">
+                        <i class="fas fa-tags"></i> Catégorie
+                    </label>
+                    <input type="text" id="categorie" name="categorie" 
+                           placeholder="Crustacés, Poissons de mer..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="type_poisson">
+                        <i class="fas fa-fish"></i> Type de poisson
+                    </label>
+                    <input type="text" id="type_poisson" name="type_poisson" 
+                           placeholder="Crevettes, Tilapia, Dorade..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantite">
+                        <i class="fas fa-weight-hanging"></i> Quantité (kg)
+                    </label>
+                    <input type="number" id="quantite" name="quantite" 
+                           placeholder="150" min="0" step="0.1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date_entree">
+                        <i class="fas fa-calendar-alt"></i> Date d'entrée
+                    </label>
+                    <input type="date" id="date_entree" name="date_entree" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="conditionnement">Conditionnement</label>
+                        <select id="conditionnement" name="conditionnement">
+                            <option value="">Sélectionner...</option>
+                            <option value="vrac">Vrac</option>
+                            <option value="filets">Filets</option>
+                            <option value="carton">Carton</option>
+                            <option value="caisse">Caisse</option>
+                            <option value="sous-vide">Sous-vide</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="qualite">Qualité</label>
+                        <select id="qualite" name="qualite">
+                            <option value="A">A - Excellente</option>
+                            <option value="B" selected>B - Bonne</option>
+                            <option value="C">C - Standard</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Enregistrer le stock
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='stock.html'">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                </div>
+            </form>
+            
+            <div class="form-helpers">
+                <button class="helper-btn" onclick="remplirExemple()">
+                    <i class="fas fa-magic"></i> Remplir exemple
+                </button>
+                <button class="helper-btn" onclick="effacerFormulaire()">
+                    <i class="fas fa-eraser"></i> Tout effacer
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/formulaire.js"></script>
+</body>
+</html>

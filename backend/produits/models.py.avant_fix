@@ -1,0 +1,140 @@
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+class Produit(models.Model):
+    """Correspond à la table produits_produit"""
+    
+    class TypeProduit(models.TextChoices):
+        POISSON = 'POISSON', _('Poisson')
+        CREVETTE = 'CREVETTE', _('Crevette')
+        MOLLUSQUE = 'MOLLUSQUE', _('Mollusque')
+        CRUSTACE = 'CRUSTACE', _('Crustacé')
+        ALGUE = 'ALGUE', _('Algue')
+        AUTRE = 'AUTRE', _('Autre')
+    
+    id_produit = models.IntegerField(
+        primary_key=True,
+        db_column='ID_produit',
+        verbose_name=_('ID Produit')
+    )
+    
+    nom_produit = models.CharField(
+        max_length=100,
+        db_column='Nom_produit',
+        verbose_name=_('Nom du produit')
+    )
+    
+    type_produit = models.CharField(
+        max_length=50,
+        db_column='Type_produit',
+        choices=TypeProduit.choices,
+        verbose_name=_('Type de produit'),
+        blank=True
+    )
+    
+    unite = models.CharField(
+        max_length=20,
+        db_column='Unite',
+        verbose_name=_('Unité'),
+        blank=True
+    )
+    
+    class Meta:
+        db_table = 'produits_produit'
+        managed = False
+        verbose_name = _('Produit')
+        verbose_name_plural = _('Produits')
+        ordering = ['nom_produit']
+    
+    def __str__(self):
+        return f"{self.nom_produit} ({self.id_produit})"
+
+class Lot(models.Model):
+    """Correspond à la table produits_lot - Élément central de traçabilité"""
+    
+    class StatutLot(models.TextChoices):
+        EN_PRODUCTION = 'PROD', _('En production')
+        EN_STOCK = 'STOCK', _('En stock')
+        EN_LIVRAISON = 'LIV', _('En livraison')
+        VENDU = 'VENDU', _('Vendu')
+        PERIME = 'PERIME', _('Périmé')
+    
+    id_lot = models.IntegerField(
+        primary_key=True,
+        db_column='ID_lot',
+        verbose_name=_('ID Lot')
+    )
+    
+    date_reception = models.DateField(
+        db_column='Date_Reception',
+        verbose_name=_('Date de réception'),
+        null=True,
+        blank=True
+    )
+    
+    date_peremption = models.DateField(
+        db_column='Date_peremption',
+        verbose_name=_('Date de péremption'),
+        null=True,
+        blank=True
+    )
+    
+    quantite = models.IntegerField(
+        db_column='Quantite',
+        verbose_name=_('Quantité')
+    )
+    
+    statut_lot = models.CharField(
+        max_length=50,
+        db_column='Statut_Lot',
+        choices=StatutLot.choices,
+        verbose_name=_('Statut du lot'),
+        default=StatutLot.EN_STOCK
+    )
+    
+    # Clés étrangères (références vers autres tables)
+
+  commande = models.ForeignKey(
+        'logistique.CommandeAchat',  # App.Model en chaîne pour éviter import circulaire
+        on_delete=models.CASCADE,
+        db_column='ID_commande'  # Garde le même nom de colonne
+    )
+
+
+  entrepot = models.ForeignKey(
+        'logistique.Entrepot',
+        on_delete=models.CASCADE,
+        db_column='ID_entrepot'
+    )
+    
+    
+    produit = models.ForeignKey(
+        'produits.Produit',
+        on_delete=models.CASCADE,
+        db_column='ID_produit'
+    )
+    
+    class Meta:
+        db_table = 'produits_lot'
+        managed = False
+        verbose_name = _('Lot')
+        verbose_name_plural = _('Lots')
+        ordering = ['-date_reception']
+    
+     def __str__(self):
+        return f"Lot {self.id_lot} - {self.produit.nom_produit if self.produit else 'N/A'}"
+    
+    def jours_restants(self):
+        """Calcule les jours restants avant péremption"""
+        from datetime import date
+        if self.date_peremption:
+            jours = (self.date_peremption - date.today()).days
+            return max(0, jours) if jours > 0 else 0
+        return None
+    
+    def est_perime(self):
+        """Vérifie si le lot est périmé"""
+        from datetime import date
+        if self.date_peremption:
+            return date.today() > self.date_peremption
+        return False

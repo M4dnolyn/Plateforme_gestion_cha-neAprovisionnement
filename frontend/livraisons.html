@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planification Livraisons - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container {
+            padding: 30px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-truck"></i>
+                    <h1>Mokpokpo Log.</h1>
+                </div>
+                <div class="user-info">
+                    <span>Gestionnaire Logistique</span>
+                    <button class="btn btn-sm btn-outline" id="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <a href="dashboard-logistique.html" class="nav-link">Tableau de bord</a>
+                <a href="livraisons.html" class="nav-link active">Planification & Suivi</a>
+                <a href="incidents.html" class="nav-link">Incidents</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <div class="form-card">
+            <h3><i class="fas fa-plus-circle"></i> Planifier une livraison</h3>
+            <form id="delivery-form" style="margin-top: 15px;">
+                <div class="form-grid">
+                    <div class="form-group"><label>Produit / Lot</label><select id="del-lot" class="form-control"
+                            required></select></div>
+                    <div class="form-group"><label>Date</label><input type="date" id="del-date" class="form-control"
+                            required></div>
+                    <div class="form-group"><label>Heure</label><input type="time" id="del-time" class="form-control"
+                            required></div>
+                    <div class="form-group"><label>Destination</label><input type="text" id="del-dest"
+                            class="form-control" placeholder="Ville, Client..." required></div>
+                    <div class="form-group"><label>Responsable</label><input type="text" id="del-resp"
+                            class="form-control" placeholder="Nom du chauffeur..." required></div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 20px;"><i class="fas fa-save"></i>
+                    Enregistrer</button>
+            </form>
+        </div>
+
+        <div class="stock-list-section">
+            <h3><i class="fas fa-history"></i> Historique des livraisons</h3>
+            <div class="table-container">
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Date / Heure</th>
+                            <th>Produit</th>
+                            <th>Destination</th>
+                            <th>Responsable</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deliveries-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadDeliveries(); loadLots();
+            document.getElementById('delivery-form').addEventListener('submit', createDelivery);
+            document.getElementById('logout-btn').addEventListener('click', () => { localStorage.clear(); window.location.href = 'login.html'; });
+        });
+        async function loadLots() {
+            const lots = await api.getStocks();
+            const select = document.getElementById('del-lot');
+            lots.forEach(l => {
+                const opt = document.createElement('option');
+                opt.value = l.id_lot;
+                opt.textContent = `Lot #${l.id_lot} - ${l.nom_produit}`;
+                select.appendChild(opt);
+            });
+        }
+        async function loadDeliveries() {
+            const deliveries = await api.getDeliveries();
+            const tbody = document.getElementById('deliveries-body');
+            tbody.innerHTML = deliveries.map(d => `
+                <tr>
+                    <td>${d.date_livraison} ${d.heure_livraison || ''}</td>
+                    <td>${d.produit_nom || 'N/A'}</td>
+                    <td>${d.destination}</td>
+                    <td>${d.responsable || 'N/A'}</td>
+                    <td><span class="badge ${d.statut_livraison === 'Livré' ? 'status-ok' : 'status-pending'}">${d.statut_livraison}</span></td>
+                </tr>
+            `).join('');
+        }
+        async function createDelivery(e) {
+            e.preventDefault();
+            const data = {
+                id_lot: document.getElementById('del-lot').value,
+                date_livraison: document.getElementById('del-date').value,
+                heure_livraison: document.getElementById('del-time').value,
+                destination: document.getElementById('del-dest').value,
+                responsable: document.getElementById('del-resp').value,
+                statut_livraison: 'Planifié'
+            };
+            await api.request('/api/livraisons/', { method: 'POST', body: JSON.stringify(data) });
+            alert('Livraison planifiée !');
+            loadDeliveries();
+        }
+    </script>
+</body>
+
+</html>

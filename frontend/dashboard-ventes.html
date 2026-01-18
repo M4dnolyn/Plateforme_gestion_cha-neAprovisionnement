@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Ventes - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Font Awesome & Chart.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-fish"></i>
+                    <h2>Ferme Mokpokpo</h2>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="dashboard-ventes.html" class="menu-item active">
+                    <i class="fas fa-tachometer-alt menu-icon"></i>
+                    <span class="menu-text">Tableau de bord</span>
+                </a>
+                <a href="ventes.html" class="menu-item">
+                    <i class="fas fa-shopping-cart menu-icon"></i>
+                    <span class="menu-text">Gestion Ventes</span>
+                </a>
+                <a href="catalogue.html" class="menu-item">
+                    <i class="fas fa-fish menu-icon"></i>
+                    <span class="menu-text">Catalogue</span>
+                </a>
+                <a href="notifications.html" class="menu-item">
+                    <i class="fas fa-envelope menu-icon"></i>
+                    <span class="menu-text">Notifications</span>
+                </a>
+
+                <div class="menu-spacer"></div>
+
+                <a href="#" class="menu-item logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt menu-icon"></i>
+                    <span class="menu-text">Déconnexion</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="toggle-sidebar" id="toggle-sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="topbar-title">
+                        <h1>Espace Ventes</h1>
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">Chargement...</div>
+                        <div class="user-role">Gestionnaire Ventes</div>
+                    </div>
+                    <div class="user-avatar" style="background: var(--sales-color, #e74c3c);">
+                        <i class="fas fa-store"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="welcome-section">
+                    <h2>Performance des Ventes</h2>
+                    <p class="subtitle">Suivi des revenus et des commandes - <span id="current-date"></span></p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Ventes du jour</h3>
+                            <div class="stat-icon red">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="daily-sales">0 CFA</div>
+                        <div class="stat-label">Valeur totale</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Commandes</h3>
+                            <div class="stat-icon blue">
+                                <i class="fas fa-shopping-basket"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="order-count">0</div>
+                        <div class="stat-label">Aujourd'hui</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Top Produit</h3>
+                            <div class="stat-icon green">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="top-product">-</div>
+                        <div class="stat-label">Plus vendu</div>
+                    </div>
+                </div>
+
+                <!-- Charts Area -->
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Revenus de la semaine</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Ventes par catégorie</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="recent-activity">
+                    <div class="activity-header">
+                        <h3>Dernières transactions</h3>
+                        <a href="ventes.html" class="btn btn-sm btn-outline">Voir tout</a>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Facture</th>
+                                    <th>Client</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-sales-list">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 20px;">
+                                        <i class="fas fa-spinner fa-spin"></i> Chargement...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/ventes.js"></script>
+</body>
+
+</html>

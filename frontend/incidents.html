@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalement Incidents - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container {
+            padding: 30px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-exclamation-triangle"></i>
+                    <h1>Mokpokpo Log.</h1>
+                </div>
+                <div class="user-info"><span>Gestionnaire Logistique</span></div>
+            </div>
+            <nav class="main-nav">
+                <a href="dashboard-logistique.html" class="nav-link">Tableau de bord</a>
+                <a href="livraisons.html" class="nav-link">Planification & Suivi</a>
+                <a href="incidents.html" class="nav-link active">Incidents</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <div class="form-card">
+            <h3><i class="fas fa-bolt"></i> Signaler un problème</h3>
+            <form id="incident-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>Type d'incident</label>
+                    <select id="inc-type" class="form-control" required>
+                        <option value="Panne véhicule">Panne véhicule</option>
+                        <option value="Retard">Retard important</option>
+                        <option value="Accident">Accident</option>
+                        <option value="Produit endommagé">Produit endommagé</option>
+                        <option value="Erreur destination">Erreur destination</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Description</label>
+                    <textarea id="inc-desc" class="form-control" rows="4" required
+                        placeholder="Détails du problème..."></textarea>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Livraison associée (optionnel)</label>
+                    <select id="inc-del" class="form-control"></select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 20px;"><i
+                        class="fas fa-paper-plane"></i> Envoyer le rapport</button>
+            </form>
+        </div>
+
+        <div class="stock-list-section">
+            <h3><i class="fas fa-list"></i> Liste des incidents signalés</h3>
+            <div class="table-container">
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                            <th>Livraison</th>
+                        </tr>
+                    </thead>
+                    <tbody id="incidents-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadIncidents(); loadDeliveries();
+            document.getElementById('incident-form').addEventListener('submit', createIncident);
+        });
+        async function loadDeliveries() {
+            const deliveries = await api.getDeliveries();
+            const select = document.getElementById('inc-del');
+            select.innerHTML = '<option value="">Aucune</option>' + deliveries.map(d => `<option value="${d.id_livraison}">Livraison #${d.id_livraison} - ${d.destination}</option>`).join('');
+        }
+        async function loadIncidents() {
+            const incidents = await api.request('/api/incidents/');
+            const tbody = document.getElementById('incidents-body');
+            tbody.innerHTML = (incidents || []).map(i => `
+                <tr>
+                    <td>#${i.id_incident}</td>
+                    <td>${i.type_incident}</td>
+                    <td>${new Date(i.date_incident).toLocaleString()}</td>
+                    <td><span class="badge ${i.statut === 'Ouvert' ? 'status-pending' : 'status-ok'}">${i.statut}</span></td>
+                    <td>${i.id_livraison || 'Global'}</td>
+                </tr>
+            `).join('');
+        }
+        async function createIncident(e) {
+            e.preventDefault();
+            const data = {
+                type_incident: document.getElementById('inc-type').value,
+                description: document.getElementById('inc-desc').value,
+                id_livraison: document.getElementById('inc-del').value || null
+            };
+            await api.request('/api/incidents/', { method: 'POST', body: JSON.stringify(data) });
+            alert('Incident signalé !');
+            loadIncidents();
+        }
+    </script>
+</body>
+
+</html>

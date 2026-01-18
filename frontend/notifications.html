@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .notif-container {
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .notif-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-fish"></i>
+                    <h1>Ferme Mokpokpo</h1>
+                </div>
+                <div class="user-info">
+                    <span id="current-user">Gestionnaire de Stock</span>
+                    <button class="btn btn-sm btn-outline" id="logout-btn"><i class="fas fa-sign-out-alt"></i>
+                        Déconnexion</button>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <a href="catalogue.html" class="nav-link"><i class="fas fa-fish"></i> Catalogue</a>
+                <a href="stock.html" class="nav-link"><i class="fas fa-boxes"></i> Stock</a>
+                <a href="alertes.html" class="nav-link"><i class="fas fa-bell"></i> Alertes</a>
+                <a href="notifications.html" class="nav-link active"><i class="fas fa-envelope"></i> Notifications</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="notif-container">
+        <div class="section-header">
+            <h2><i class="fas fa-paper-plane"></i> Envoyer une Notification</h2>
+        </div>
+
+        <div class="notif-card">
+            <form id="notif-form">
+                <div class="form-group">
+                    <label>Type de notification</label>
+                    <select id="notif-type" class="form-control" required>
+                        <option value="Information">Information Générale</option>
+                        <option value="Urgent">Alerte Urgente</option>
+                        <option value="Maintenance">Maintenance / Système</option>
+                        <option value="Rappel">Rappel de tâche</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Message</label>
+                    <textarea id="notif-message" class="form-control" rows="5" required
+                        placeholder="Écrivez votre message ici..."></textarea>
+                </div>
+                <div style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Envoyer
+                    </button>
+                    <button type="reset" class="btn btn-outline">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            });
+
+            document.getElementById('notif-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = {
+                    type_notification: document.getElementById('notif-type').value,
+                    message: document.getElementById('notif-message').value,
+                    date_envoi: new Date().toISOString()
+                };
+
+                try {
+                    await api.request('/api/notifications/', { method: 'POST', body: JSON.stringify(data) });
+                    alert('Notification envoyée avec succès !');
+                    document.getElementById('notif-form').reset();
+                } catch (err) {
+                    alert('Erreur lors de l\'envoi');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue Produits - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/catalogue.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-fish"></i>
+                    <h1>Ferme Mokpokpo</h1>
+                </div>
+                <div class="user-info">
+                    <span id="current-user">Utilisateur</span>
+                    <button class="btn btn-sm btn-outline" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </button>
+                </div>
+            </div>
+
+            <nav class="main-nav">
+                <a href="dashboard-admin.html" class="nav-link" id="dashboard-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="stock.html" class="nav-link">
+                    <i class="fas fa-boxes"></i> Stocks
+                </a>
+                <a href="catalogue.html" class="nav-link active">
+                    <i class="fas fa-fish"></i> Catalogue
+                </a>
+                <a href="employes.html" class="nav-link">
+                    <i class="fas fa-users"></i> Employés
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="catalogue-container">
+        <div class="catalogue-header">
+            <h1><i class="fas fa-book-open"></i> Catalogue des Produits</h1>
+            <p>Découvrez notre sélection de produits halieutiques frais et de qualité</p>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number" data-stat="produits-disponibles">24</span>
+                    <span class="stat-label">Produits disponibles</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-stat="categories">3</span>
+                    <span class="stat-label">Catégories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-stat="en-stock">15</span>
+                    <span class="stat-label">En stock</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-stat="nouveautes">9</span>
+                    <span class="stat-label">Nouveautés</span>
+                </div>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterProducts('all')">
+                    <i class="fas fa-th"></i> Tous
+                </button>
+                <button class="filter-btn" onclick="filterProducts('crustaces')">
+                    <i class="fas fa-crab"></i> Crustacés
+                </button>
+                <button class="filter-btn" onclick="filterProducts('poissons_mer')">
+                    <i class="fas fa-fish"></i> Poissons de mer
+                </button>
+                <button class="filter-btn" onclick="filterProducts('poissons_douce')">
+                    <i class="fas fa-water"></i> Poissons d'eau douce
+                </button>
+            </div>
+        </div>
+
+        <!-- Crustacés -->
+        <div class="category-section" data-category="crustaces">
+            <h2 class="category-title"><i class="fas fa-crab"></i> Crustacés</h2>
+            <div class="products-grid">
+                <!-- Crevettes -->
+                <div class="product-card">
+                    <div class="image-placeholder">
+                        <i class="fas fa-shrimp"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-shrimp"></i> Crevettes
+                        </h3>
+                        <p>Frais de pêche du jour, taille moyenne, parfaites pour grillades.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">₣ 8.500</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">150 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A+</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Crevettes')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Crevettes')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crabes -->
+                <div class="product-card">
+                    <div class="image-placeholder">
+                        <i class="fas fa-crab"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-crab"></i> Crabes
+                        </h3>
+                        <p>Crabes bleus frais, idéaux pour soupes et plats traditionnels.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">₣ 12.000</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">80 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Crabes')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Crabes')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Langouste -->
+                <div class="product-card">
+                    <div class="image-placeholder">
+                        <i class="fas fa-fish"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-fish"></i> Langouste
+                        </h3>
+                        <p>Langouste de roche, produit de luxe pour occasions spéciales.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">₣ 45.000</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">25 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A++</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Langouste')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Langouste')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Poissons de mer -->
+        <div class="category-section" data-category="poissons_mer">
+            <h2 class="category-title"><i class="fas fa-water"></i> Poissons de mer</h2>
+            <div class="products-grid">
+                <!-- Thon -->
+                <div class="product-card">
+                    <div class="image-placeholder">
+                        <i class="fas fa-fish"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-fish"></i> Thon
+                        </h3>
+                        <p>Thon frais pêché, idéal pour sushis et grillades.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">₣ 15.000</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">120 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A+</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Thon')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Thon')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dorade -->
+                <div class="product-card">
+                    <div class="image-placeholder">
+                        <i class="fas fa-fish"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-fish"></i> Dorade
+                        </h3>
+                        <p>Dorade royale, poisson noble parfait pour four ou grill.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">₣ 18.000</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">90 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A+</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Dorade')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Dorade')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Poissons d'eau douce -->
+        <div class="category-section" data-category="poissons_douce">
+            <h2 class="category-title"><i class="fas fa-tint"></i> Poissons d'eau douce</h2>
+            <div class="products-grid">
+                <!-- Tilapia -->
+                <div class="product-card">
+                    <div class="image-placeholder">
+                        <i class="fas fa-fish"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-fish"></i> Tilapia
+                        </h3>
+                        <p>Tilapia d'élevage local, produit phare de notre ferme.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">₣ 6.500</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">300 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Tilapia')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Tilapia')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="catalogue-navigation">
+            <a href="stock.html" class="nav-link">
+                <i class="fas fa-boxes"></i> Gestion des Stocks
+            </a>
+            <a href="dashboard-admin.html" class="nav-link" id="dashboard-link-footer">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="login.html" class="nav-link">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/catalogue.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+class Vente(models.Model):
+    """Correspond à ventes_vente"""
+    
+    class StatutVente(models.TextChoices):
+        EN_ATTENTE = 'ATTENTE', _('En attente')
+        CONFIRMEE = 'CONFIRMEE', _('Confirmée')
+        PAYEE = 'PAYEE', _('Payée')
+        LIVREE = 'LIVREE', _('Livrée')
+        ANNULEE = 'ANNULEE', _('Annulée')
+    
+    id_vente = models.IntegerField(
+        primary_key=True,
+        db_column='ID_vente',
+        verbose_name=_('ID Vente')
+    )
+    
+    date_vente = models.DateField(
+        db_column='Date_vente',
+        verbose_name=_('Date de vente')
+    )
+    
+    montant_total = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        db_column='montant_total',
+        verbose_name=_('Montant total')
+    )
+    
+    statut_vente = models.CharField(
+        max_length=50,
+        db_column='Statut_vente',
+        choices=StatutVente.choices,
+        verbose_name=_('Statut de la vente'),
+        default=StatutVente.EN_ATTENTE
+    )
+    
+ utilisateur = models.ForeignKey(
+        'users.Utilisateur',
+        on_delete=models.SET_NULL,
+        db_column='ID_utilisateur',
+        null=True,
+        blank=True
+    )
+        
+    class Meta:
+        db_table = 'ventes_vente'
+        managed = False
+        verbose_name = _('Vente')
+        verbose_name_plural = _('Ventes')
+        ordering = ['-date_vente']
+    
+    def __str__(self):
+        return f"Vente {self.id_vente} - {self.montant_total} €"
+    
+    def get_statut_color(self):
+        """Retourne une couleur CSS selon le statut"""
+        colors = {
+            'ATTENTE': 'warning',
+            'CONFIRMEE': 'info',
+            'PAYEE': 'success',
+            'LIVREE': 'primary',
+            'ANNULEE': 'danger',
+        }
+        return colors.get(self.statut_vente, 'secondary')
+
+class LigneVente(models.Model):
+    """Correspond à ventes_lignevente"""
+    
+    id_lignevente = models.IntegerField(
+        primary_key=True,
+        db_column='ID_LigneVente',
+        verbose_name=_('ID Ligne de vente')
+    )
+    
+    quantite_vendue = models.IntegerField(
+        db_column='Quantite_vendue',
+        verbose_name=_('Quantité vendue')
+    )
+    
+    prix_unitaire = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        db_column='Prix_unitaire',
+        verbose_name=_('Prix unitaire')
+    )
+    
+  vente = models.ForeignKey(
+        'ventes.Vente',
+        on_delete=models.CASCADE,
+        db_column='ID_vente'
+    )
+    
+    produit = models.ForeignKey(
+        'produits.Produit',
+        on_delete=models.CASCADE,
+        db_column='ID_produit'
+    )
+    
+    class Meta:
+        db_table = 'ventes_lignevente'
+        managed = False
+        verbose_name = _('Ligne de vente')
+        verbose_name_plural = _('Lignes de vente')
+        ordering = ['id_vente', 'id_lignevente']
+    
+    def __str__(self):
+        return f"Ligne {self.id_lignevente} - Vente {self.id_vente}"
+    
+    def montant_ligne(self):
+        """Calcule le montant de la ligne (quantité * prix unitaire)"""
+        return self.quantite_vendue * self.prix_unitaire
+
+class Prevision(models.Model):
+    """Correspond à ventes_prevision"""
+    
+    id_prevision = models.IntegerField(
+        primary_key=True,
+        db_column='ID_prevision',
+        verbose_name=_('ID Prévision')
+    )
+    
+    periode = models.CharField(
+        max_length=50,
+        db_column='Periode',
+        verbose_name=_('Période')
+    )
+    
+    quantite_prevision = models.IntegerField(
+        db_column='Quantite_prevision',
+        verbose_name=_('Quantité prévue')
+    )
+    
+    date_prevision = models.DateField(
+        db_column='Date_prevision',
+        verbose_name=_('Date de prévision')
+    )
+    
+    id_produit = models.IntegerField(
+        db_column='ID_produit',
+        verbose_name=_('ID Produit')
+    )
+    
+    class Meta:
+        db_table = 'ventes_prevision'
+        managed = False
+        verbose_name = _('Prévision')
+        verbose_name_plural = _('Prévisions')
+        ordering = ['-date_prevision']
+    
+    def __str__(self):
+        return f"Prévision {self.id_prevision} - {self.periode}"

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Alertes - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .alerts-container {
+            padding: 30px;
+        }
+
+        .alert-form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-fish"></i>
+                    <h1>Ferme Mokpokpo</h1>
+                </div>
+                <div class="user-info">
+                    <span id="current-user">Gestionnaire de Stock</span>
+                    <button class="btn btn-sm btn-outline" id="logout-btn"><i class="fas fa-sign-out-alt"></i>
+                        Déconnexion</button>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <a href="catalogue.html" class="nav-link"><i class="fas fa-fish"></i> Catalogue</a>
+                <a href="stock.html" class="nav-link"><i class="fas fa-boxes"></i> Stock</a>
+                <a href="alertes.html" class="nav-link active"><i class="fas fa-bell"></i> Alertes</a>
+                <a href="notifications.html" class="nav-link"><i class="fas fa-envelope"></i> Notifications</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="alerts-container">
+        <div class="section-header">
+            <h2><i class="fas fa-bell"></i> Gestion des Alertes</h2>
+        </div>
+
+        <div class="alert-form-card">
+            <h3><i class="fas fa-plus-circle"></i> Ajouter une alerte</h3>
+            <form id="alert-form" style="margin-top: 15px;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Produit / Lot</label>
+                        <select id="alert-lot" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Type d'alerte</label>
+                        <select id="alert-type" class="form-control" required>
+                            <option value="Rupture">Rupture de stock</option>
+                            <option value="Qualité">Problème Qualité</option>
+                            <option value="Température">Écart Température</option>
+                            <option value="Péremption">Date d'expiration proche</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Niveau de priorité</label>
+                        <select id="alert-level" class="form-control" required>
+                            <option value="1">Normal</option>
+                            <option value="2">Important</option>
+                            <option value="3">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Message / Description</label>
+                        <textarea id="alert-message" class="form-control" rows="3" required
+                            placeholder="Détails de l'alerte..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-save"></i> Enregistrer l'alerte
+                </button>
+            </form>
+        </div>
+
+        <div class="stock-list-section">
+            <h3><i class="fas fa-history"></i> Liste des alertes actives</h3>
+            <div class="table-container">
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>N° Alerte</th>
+                            <th>Type</th>
+                            <th>Niveau</th>
+                            <th>Date</th>
+                            <th>Produit</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alerts-body">
+                        <tr>
+                            <td colspan="6" class="loading-row"><i class="fas fa-spinner fa-spin"></i> Chargement...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            initLogoutButton();
+            loadAlerts();
+            loadLots();
+
+            document.getElementById('alert-form').addEventListener('submit', createAlert);
+        });
+
+        async function loadLots() {
+            try {
+                const lots = await api.getStocks();
+                const select = document.getElementById('alert-lot');
+                lots.forEach(lot => {
+                    const option = document.createElement('option');
+                    option.value = lot.id_lot;
+                    option.textContent = `Lot #${lot.id_lot} - ${lot.nom_produit || 'Produit'}`;
+                    select.appendChild(option);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadAlerts() {
+            try {
+                const alerts = await api.request('/api/alertes/');
+                const tbody = document.getElementById('alerts-body');
+                if (!alerts || alerts.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">Aucune alerte active</td></tr>';
+                    return;
+                }
+                let html = '';
+                alerts.forEach(a => {
+                    const levelClass = a.niveau == 3 ? 'status-pending' : (a.niveau == 1 ? 'status-ok' : '');
+                    const levelText = a.niveau == 3 ? 'URGENT' : (a.niveau == 1 ? 'NORMAL' : 'IMPORTANT');
+                    html += `<tr>
+                        <td>#${a.id_alerte}</td>
+                        <td>${a.type_alerte}</td>
+                        <td><span class="badge ${levelClass}">${levelText}</span></td>
+                        <td>${new Date(a.date_creation).toLocaleDateString()}</td>
+                        <td>${a.produit_nom || 'N/A'}</td>
+                        <td>Ouvert</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            } catch (e) { console.error(e); }
+        }
+
+        async function createAlert(e) {
+            e.preventDefault();
+            const data = {
+                id_lot: document.getElementById('alert-lot').value,
+                type_alerte: document.getElementById('alert-type').value,
+                niveau: document.getElementById('alert-level').value,
+                message: document.getElementById('alert-message').value,
+                date_creation: new Date().toISOString().split('T')[0]
+            };
+            try {
+                await api.request('/api/alertes/', { method: 'POST', body: JSON.stringify(data) });
+                alert('Alerte créée avec succès !');
+                document.getElementById('alert-form').reset();
+                loadAlerts();
+            } catch (e) { alert('Erreur lors de la création'); }
+        }
+
+        function initLogoutButton() {
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            });
+        }
+    </script>
+</body>
+
+</html>

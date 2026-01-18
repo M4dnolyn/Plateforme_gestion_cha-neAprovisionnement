@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Font Awesome & Chart.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Configuration -->
+    <script src="js/config.js"></script>
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-fish"></i>
+                    <h2>Ferme Mokpokpo</h2>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="dashboard-admin.html" class="menu-item active">
+                    <i class="fas fa-tachometer-alt menu-icon"></i>
+                    <span class="menu-text">Tableau de bord</span>
+                </a>
+                <a href="employes.html" class="menu-item">
+                    <i class="fas fa-users menu-icon"></i>
+                    <span class="menu-text">Employés</span>
+                </a>
+                <a href="stock.html" class="menu-item">
+                    <i class="fas fa-boxes menu-icon"></i>
+                    <span class="menu-text">Stocks global</span>
+                </a>
+                <a href="catalogue.html" class="menu-item">
+                    <i class="fas fa-fish menu-icon"></i>
+                    <span class="menu-text">Catalogue</span>
+                </a>
+
+                <div class="menu-spacer"></div>
+
+                <a href="#" class="menu-item logout-btn">
+                    <i class="fas fa-sign-out-alt menu-icon"></i>
+                    <span class="menu-text">Déconnexion</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <button class="toggle-sidebar" id="toggle-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="topbar-title">
+                    <h1>Administration du Système</h1>
+                </div>
+
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-name" id="admin-name">Administrateur</div>
+                        <div class="user-role">Superviseur</div>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="welcome-section">
+                    <h2>Bienvenue, <span id="welcome-name">Administrateur</span> !</h2>
+                    <p class="subtitle">Vue d'ensemble de la plateforme - <span id="current-date"></span></p>
+                </div>
+
+                <!-- Statistiques rapides -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Total Produits</h3>
+                            <div class="stat-icon blue">
+                                <i class="fas fa-fish"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Référencés</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Alertes Stock</h3>
+                            <div class="stat-icon red">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Niveaux critiques</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Employés actifs</h3>
+                            <div class="stat-icon green">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Tous services</div>
+                    </div>
+                </div>
+
+                <!-- Graphiques -->
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Flux des stocks global</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Répartition des ressources</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="employeesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activités récentes -->
+                <div class="recent-activity">
+                    <div class="activity-header">
+                        <h3>Dernières activités système</h3>
+                    </div>
+                    <div class="activity-list">
+                        <div class="loading-item">
+                            <i class="fas fa-spinner fa-spin"></i> Chargement des activités...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard-admin.js"></script>
+</body>
+
+</html>

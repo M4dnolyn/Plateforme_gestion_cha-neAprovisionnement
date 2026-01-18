@@ -1,0 +1,91 @@
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+class Utilisateur(models.Model):
+    """Correspond à users_utilisateur"""
+    
+    class RoleUtilisateur(models.TextChoices):
+        ADMINISTRATEUR = 'ADMIN', _('Administrateur')
+        GESTIONNAIRE_STOCK = 'STOCK', _('Gestionnaire Stock')
+        GESTIONNAIRE_LOGISTIQUE = 'LOG', _('Gestionnaire Logistique')
+        GESTIONNAIRE_VENTES = 'VENTE', _('Gestionnaire Ventes')
+    
+    id_utilisateur = models.IntegerField(
+        primary_key=True,
+        db_column='ID_utilisateur',
+        verbose_name=_('ID Utilisateur')
+    )
+    
+    nom = models.CharField(
+        max_length=100,
+        db_column='Nom',
+        verbose_name=_('Nom')
+    )
+    
+    email = models.CharField(
+        max_length=100,
+        db_column='Email',
+        verbose_name=_('Email'),
+        blank=True
+    )
+    
+    role = models.CharField(
+        max_length=50,
+        db_column='role',
+        choices=RoleUtilisateur.choices,
+        verbose_name=_('Rôle'),
+        default=RoleUtilisateur.GESTIONNAIRE_STOCK
+    )
+    
+    mot_de_passe = models.CharField(
+        max_length=255,
+        db_column='mot_de_passe',
+        verbose_name=_('Mot de passe')
+    )
+    
+    class Meta:
+        db_table = 'users_utilisateur'
+        managed = False
+        verbose_name = _('Utilisateur')
+        verbose_name_plural = _('Utilisateurs')
+        ordering = ['nom']
+    
+    def __str__(self):
+        return f"{self.nom} ({self.get_role_display()})"
+    
+    def est_administrateur(self):
+        return self.role == self.RoleUtilisateur.ADMINISTRATEUR
+    
+    def est_gestionnaire_stock(self):
+        return self.role == self.RoleUtilisateur.GESTIONNAIRE_STOCK
+    
+    def est_gestionnaire_logistique(self):
+        return self.role == self.RoleUtilisateur.GESTIONNAIRE_LOGISTIQUE
+    
+    def est_gestionnaire_ventes(self):
+        return self.role == self.RoleUtilisateur.GESTIONNAIRE_VENTES
+    
+    # Méthode utilitaire pour le hachage (si vous gérez les mots de passe)
+    def verifier_mot_de_passe(self, mot_de_passe):
+        """
+        Vérifie si le mot de passe correspond.
+        À adapter selon votre méthode de hachage.
+        """
+        import hashlib
+        # Exemple avec SHA256
+        hashed = hashlib.sha256(mot_de_passe.encode()).hexdigest()
+        return self.mot_de_passe == hashed
+    
+    @classmethod
+    def authentifier(cls, email, mot_de_passe):
+        """
+        Authentifie un utilisateur métier.
+        """
+        try:
+            utilisateur = cls.objects.using('postgres').get(email=email)
+            if utilisateur.verifier_mot_de_passe(mot_de_passe):
+                return utilisateur
+        except cls.DoesNotExist:
+            return None
+        return None
+

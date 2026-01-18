@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="auth-container">
+    <div class="auth-box">
+      <div class="auth-header">
+        <h1 class="auth-logo"><i class="fas fa-fish"></i> Ferme Mokpokpo</h1>
+        <h2 class="auth-title">Plateforme Halieutique</h2>
+        <p class="auth-subtitle">Gestion de la chaîne d'approvisionnement</p>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label for="email"> <i class="fas fa-envelope"></i> Email </label>
+          <input type="email" id="email" name="email" placeholder="exemple@ferme-mokpokpo.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            <i class="fas fa-lock"></i> Mot de passe
+          </label>
+          <input type="password" id="password" name="password" placeholder="Votre mot de passe" required />
+        </div>
+
+        <div class="form-group">
+          <label for="role"> <i class="fas fa-user-tag"></i> Rôle </label>
+          <select id="role" name="role" required>
+            <option value="">Sélectionnez votre rôle</option>
+            <option value="admin">Administrateur</option>
+            <option value="gestionnaire_stock">Gestionnaire de Stock</option>
+            <option value="gestionnaire_logistique">
+              Gestionnaire Logistique
+            </option>
+            <option value="gestionnaire_ventes">
+              Gestionnaire des Ventes
+            </option>
+          </select>
+        </div>
+
+        <button type="submit" class="auth-btn">
+          <i class="fas fa-sign-in-alt"></i> Se connecter
+        </button>
+
+        <div class="auth-footer">
+          <p><i class="fas fa-info-circle"></i> Version 1.0 - Janvier 2026</p>
+          <p>Plateforme de gestion des produits halieutiques</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+
+</html>

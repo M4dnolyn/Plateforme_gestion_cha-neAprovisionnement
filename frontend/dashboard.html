@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ferme Mokpokpo</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar sera chargée dynamiquement -->
+        <div id="sidebar-container"></div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar sera chargée dynamiquement -->
+            <div id="topbar-container"></div>
+            
+            <!-- Content Area -->
+            <div class="content-area" id="content-area">
+                <!-- Le contenu sera chargé dynamiquement ici -->
+                <div class="loading-container">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin fa-3x"></i>
+                    </div>
+                    <p>Chargement du dashboard...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Files -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Initialiser le dashboard quand la page est prête
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier l'authentification
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            
+            if (!token || !userRole) {
+                // Non authentifié, rediriger vers login
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Initialiser le dashboard
+            if (typeof initDashboard === 'function') {
+                initDashboard();
+            }
+        });
+    </script>
+</body>
+</html>
