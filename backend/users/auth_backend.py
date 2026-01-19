@@ -12,20 +12,30 @@ class DualAuthenticationBackend(BaseBackend):
     
     def authenticate(self, request, username=None, password=None, **kwargs):
         # Essayer d'abord l'authentification Django (SQLite)
+        user = None
         try:
-            user = User.objects.get(username=username)
+            # Recherche par username
+            user = User.objects.using('default').get(username=username)
+        except User.DoesNotExist:
+            try:
+                # Fallback : Recherche par email dans SQLite
+                user = User.objects.using('default').get(email=username)
+            except User.DoesNotExist:
+                pass
+        
+        if user:
             if user.check_password(password):
                 return user
-        except User.DoesNotExist:
-            pass
         
         # Ensuite, essayer l'authentification métier (PostgreSQL)
         try:
-            utilisateur_metier = Utilisateur.objects.using('postgres').get(email=username)
-            # Vérifier le mot de passe selon votre méthode de hachage
+            # Chercher dans PostgreSQL en utilisant le router
+            utilisateur_metier = Utilisateur.objects.get(email=username)
+            
+            # Vérifier le mot de passe
             if utilisateur_metier.verifier_mot_de_passe(password):
-                # Créer un user Django temporaire pour la session
-                user, created = User.objects.get_or_create(
+                # Créer ou récupérer un User Django pour la session
+                user, created = User.objects.using('default').get_or_create(
                     username=utilisateur_metier.email,
                     defaults={
                         'email': utilisateur_metier.email,
@@ -34,10 +44,24 @@ class DualAuthenticationBackend(BaseBackend):
                         'is_staff': utilisateur_metier.est_administrateur(),
                     }
                 )
-                user.set_unusable_password()  # Pas de mot de passe Django
-                user.save()
+                
+                # Mettre à jour les infos si l'utilisateur existe déjà
+                if not created:
+                    user.first_name = utilisateur_metier.nom
+                    user.is_staff = utilisateur_metier.est_administrateur()
+                    user.save()
+                
+                # Stocker le rôle métier dans l'objet user pour y accéder plus tard
+                user.role_metier = utilisateur_metier.role
+                user.utilisateur_id = utilisateur_metier.id_utilisateur
+                    
                 return user
+                
         except Utilisateur.DoesNotExist:
+            pass
+        except Exception as e:
+            # Log l'erreur mais ne pas bloquer
+            print(f"Erreur authentification PostgreSQL: {e}")
             pass
         
         return None

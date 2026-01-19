@@ -23,4 +23,13 @@ class Utilisateur(models.Model):
 
     def est_administrateur(self):
         return self.role and self.role.upper() == 'ADMIN'
+    
+    def est_gestionnaire_stock(self):
+        return self.role and self.role.lower() == 'gestionnaire_stock'
+    
+    def est_gestionnaire_logistique(self):
+        return self.role and self.role.lower() == 'gestionnaire_logistique'
+    
+    def est_gestionnaire_ventes(self):
+        return self.role and self.role.lower() == 'gestionnaire_ventes'
 

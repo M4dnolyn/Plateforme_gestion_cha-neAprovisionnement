@@ -16,20 +16,37 @@ class LoginView(APIView):
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
             
-            # Utiliser notre backend personnalisé via authenticate
+            # Utilisation de l'authentification Django standard
             user = authenticate(request, username=email, password=password)
             
             if user is not None:
+                # Récupérer le rôle depuis PostgreSQL
+                try:
+                    utilisateur = Utilisateur.objects.get(email=user.email)
+                    role = utilisateur.role
+                    user_data = {
+                        'id': user.id,
+                        'email': user.email,
+                        'username': user.username,
+                        'nom': utilisateur.nom,
+                        'role': role,
+                        'departement': utilisateur.departement,
+                        'telephone': utilisateur.telephone,
+                    }
+                except Utilisateur.DoesNotExist:
+                    # Fallback pour les utilisateurs Django purs (admin)
+                    role = 'admin' if user.is_staff else 'employe'
+                    user_data = {
+                        'id': user.id,
+                        'email': user.email,
+                        'username': user.username,
+                        'nom': user.first_name or user.username,
+                        'role': role,
+                    }
+                
                 # Générer les tokens JWT
                 refresh = RefreshToken.for_user(user)
                 
-                # Récupérer les infos de l'utilisateur métier
-                try:
-                    utilisateur_metier = Utilisateur.objects.using('postgres').get(email=email)
-                    user_data = UtilisateurSerializer(utilisateur_metier).data
-                except Utilisateur.DoesNotExist:
-                    return Response({'error': 'Compte métier introuvable'}, status=status.HTTP_404_NOT_FOUND)
-
                 return Response({
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),

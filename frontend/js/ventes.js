@@ -146,11 +146,22 @@ async function loadProducts() {
     if (!select) return;
 
     try {
-        const products = await api.request('/api/produits/');
+        const response = await api.request('/api/produits/');
+        console.log("API Produits Response:", response); // Debug log
+
+        // Intelligent extraction
+        const products = Array.isArray(response) ? response : (response.results || []);
+
+        if (!Array.isArray(products)) {
+            throw new Error("Format de réponse invalide (pas un tableau)");
+        }
+
         select.innerHTML = '<option value="">Choisir un produit...</option>' +
             products.map(p => `<option value="${p.id_produit}">${p.nom_produit}</option>`).join('');
     } catch (e) {
-        select.innerHTML = '<option value="">Erreur de chargement</option>';
+        console.error("Erreur chargement produits:", e);
+        // Display specific error to user
+        select.innerHTML = `<option value="">Erreur: ${e.message || 'Problème technique'}</option>`;
     }
 }
 
@@ -160,12 +171,21 @@ async function loadLotsForProduct(productId) {
 
     select.innerHTML = '<option value="">Chargement des lots...</option>';
     try {
-        const lots = await api.request(`/api/lots/?produit=${productId}`);
+        const response = await api.request(`/api/lots/?produit=${productId}`);
+        console.log("API Lots Response:", response); // Debug log
+
+        const lots = Array.isArray(response) ? response : (response.results || []);
+
+        if (!Array.isArray(lots)) {
+            throw new Error("Format de réponse invalide (pas un tableau)");
+        }
+
         select.innerHTML = lots.length ?
             lots.map(l => `<option value="${l.id_lot}">Lot #${l.id_lot} (Restant: ${l.quantite}kg)</option>`).join('') :
             '<option value="">Aucun lot disponible</option>';
     } catch (e) {
-        select.innerHTML = '<option value="">Erreur</option>';
+        console.error("Erreur chargement lots:", e);
+        select.innerHTML = `<option value="">Erreur: ${e.message}</option>`;
     }
 }
 
@@ -174,8 +194,11 @@ async function loadSalesHistory() {
     if (!tbody) return;
 
     try {
-        const sales = await api.request('/api/ventes/');
-        if (sales.length === 0) {
+        const response = await api.request('/api/ventes/');
+        // Handle DRF pagination
+        const sales = response.results ? response.results : response;
+
+        if (!sales || sales.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucune vente enregistrée</td></tr>';
             return;
         }
@@ -186,11 +209,12 @@ async function loadSalesHistory() {
                 <td>${new Date(s.date_vente).toLocaleDateString()}</td>
                 <td>${s.produit_nom || 'Produit'}</td>
                 <td>${s.quantite_vendue} kg</td>
-                <td>${s.montant_total.toLocaleString()}</td>
-                <td><span class="status-badge ${s.Statut_vente === 'Complete' ? 'status-active' : 'status-pending'}">${s.Statut_vente}</span></td>
+                <td>${parseFloat(s.montant_total).toLocaleString()} CFA</td>
+                <td><span class="status-badge ${s.statut_vente === 'Complete' ? 'status-active' : 'status-pending'}">${s.statut_vente}</span></td>
             </tr>
         `).join('');
     } catch (e) {
+        console.error("Erreur chargement historique:", e);
         tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Erreur lors du chargement de l\'historique</td></tr>';
     }
 }

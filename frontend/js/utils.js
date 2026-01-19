@@ -67,6 +67,42 @@ function debounce(func, wait) {
     };
 }
 
+// Ajouter des liens admin si nécessaire
+function injectAdminLinks() {
+    const role = localStorage.getItem('userRole');
+    if (role === 'admin') {
+        const sidebarMenu = document.querySelector('.sidebar-menu');
+        if (sidebarMenu) {
+            // Vérifier si les liens existent déjà
+            if (!sidebarMenu.querySelector('a[href="dashboard-admin.html"]')) {
+                const dashboardLink = document.createElement('a');
+                dashboardLink.href = 'dashboard-admin.html';
+                dashboardLink.className = 'menu-item';
+                dashboardLink.innerHTML = '<i class="fas fa-tachometer-alt menu-icon"></i><span class="menu-text">Dashboard Admin</span>';
+
+                // Insérer au début
+                sidebarMenu.insertBefore(dashboardLink, sidebarMenu.firstChild);
+            }
+
+            if (!sidebarMenu.querySelector('a[href="employes.html"]')) {
+                const emplLink = document.createElement('a');
+                emplLink.href = 'employes.html';
+                emplLink.className = 'menu-item';
+                emplLink.innerHTML = '<i class="fas fa-users menu-icon"></i><span class="menu-text">Employés</span>';
+
+                // Insérer après le dashboard
+                const dashboard = sidebarMenu.querySelector('a[href="dashboard-admin.html"]');
+                if (dashboard) {
+                    sidebarMenu.insertBefore(emplLink, dashboard.nextSibling);
+                }
+            }
+        }
+    }
+}
+
+// Exécuter au chargement
+document.addEventListener('DOMContentLoaded', injectAdminLinks);
+
 // Exporter
 window.utils = {
     formatDate,
@@ -75,5 +111,6 @@ window.utils = {
     copyToClipboard,
     generateId,
     formatFileSize,
-    debounce
+    debounce,
+    injectAdminLinks
 };

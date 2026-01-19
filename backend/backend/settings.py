@@ -4,7 +4,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-halieutique-2026-postgresql'
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,17 +61,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # CONFIGURATION MULTI-BASES
 DATABASES = {
-    'default': {  # SQLite - Django Admin & Authentification
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'postgres': {  # PostgreSQL - TES 11 tables métier
+    'postgres': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'halieutique_db',
         'USER': 'postgres',
-        'PASSWORD': '',  # REMPLACE
-        'HOST': '',
-        'PORT': '',
+        'PASSWORD': 'postgres123',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -108,14 +108,15 @@ MIGRATION_MODULES = {
     # Ajoute tes autres apps ici...
 }
 AUTHENTICATION_BACKENDS = [
-    'users.auth_backend.DualAuthenticationBackend',  # Votre backend
-    'django.contrib.auth.backends.ModelBackend',     # Backend par défaut
+    'users.auth_backend.DualAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Autoriser React (localhost:3000) à appeler ton API
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  #React dev
     "http://127.0.0.1:3000",
+    "http://0.0.0.0:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

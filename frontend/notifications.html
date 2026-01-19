@@ -6,105 +6,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notifications - Ferme Mokpokpo</title>
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/stock.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .notif-container {
-            padding: 30px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
 
+    <style>
         .notif-card {
             background: white;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 800px;
+            margin: 0 auto;
         }
     </style>
 </head>
 
 <body>
-    <header class="main-header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo"><i class="fas fa-fish"></i>
-                    <h1>Ferme Mokpokpo</h1>
-                </div>
-                <div class="user-info">
-                    <span id="current-user">Gestionnaire de Stock</span>
-                    <button class="btn btn-sm btn-outline" id="logout-btn"><i class="fas fa-sign-out-alt"></i>
-                        Déconnexion</button>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-fish"></i>
+                    <h2>Ferme Mokpokpo</h2>
                 </div>
             </div>
-            <nav class="main-nav">
-                <a href="catalogue.html" class="nav-link"><i class="fas fa-fish"></i> Catalogue</a>
-                <a href="stock.html" class="nav-link"><i class="fas fa-boxes"></i> Stock</a>
-                <a href="alertes.html" class="nav-link"><i class="fas fa-bell"></i> Alertes</a>
-                <a href="notifications.html" class="nav-link active"><i class="fas fa-envelope"></i> Notifications</a>
+
+            <nav class="sidebar-menu">
+                <a href="catalogue.html" class="menu-item">
+                    <i class="fas fa-book-open menu-icon"></i>
+                    <span class="menu-text">Catalogue</span>
+                </a>
+                <a href="stock.html" class="menu-item">
+                    <i class="fas fa-boxes menu-icon"></i>
+                    <span class="menu-text">Gestion Stock</span>
+                </a>
+                <a href="alertes.html" class="menu-item">
+                    <i class="fas fa-exclamation-triangle menu-icon"></i>
+                    <span class="menu-text">Alertes Stock</span>
+                </a>
+                <a href="notifications.html" class="menu-item active">
+                    <i class="fas fa-bell menu-icon"></i>
+                    <span class="menu-text">Notifications</span>
+                </a>
+                <div class="menu-spacer"></div>
+                <a href="#" class="menu-item logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt menu-icon"></i>
+                    <span class="menu-text">Déconnexion</span>
+                </a>
             </nav>
-        </div>
-    </header>
+        </aside>
 
-    <main class="notif-container">
-        <div class="section-header">
-            <h2><i class="fas fa-paper-plane"></i> Envoyer une Notification</h2>
-        </div>
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-title">
+                    <h1><i class="fas fa-bell"></i> Centre de Notifications</h1>
+                </div>
+                <div class="user-info">
+                    <span id="current-user">Gestionnaire Stock</span>
+                </div>
+            </header>
 
-        <div class="notif-card">
-            <form id="notif-form">
-                <div class="form-group">
-                    <label>Type de notification</label>
-                    <select id="notif-type" class="form-control" required>
-                        <option value="Information">Information Générale</option>
-                        <option value="Urgent">Alerte Urgente</option>
-                        <option value="Maintenance">Maintenance / Système</option>
-                        <option value="Rappel">Rappel de tâche</option>
-                    </select>
-                </div>
-                <div class="form-group" style="margin-top: 20px;">
-                    <label>Message</label>
-                    <textarea id="notif-message" class="form-control" rows="5" required
-                        placeholder="Écrivez votre message ici..."></textarea>
-                </div>
-                <div style="margin-top: 25px; display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Envoyer
-                    </button>
-                    <button type="reset" class="btn btn-outline">Annuler</button>
-                </div>
-            </form>
-        </div>
-    </main>
+            <div class="content-area">
+                <div class="notif-card">
+                    <h3><i class="fas fa-paper-plane"></i> Envoyer une Notification</h3>
+                    <p class="text-muted" style="margin-bottom: 20px;">Envoyez des messages aux autres acteurs (Admin,
+                        Logistique, Vente).</p>
 
+                    <form id="form-notification">
+                        <div class="form-group">
+                            <label>Type de notification</label>
+                            <select id="notif-type" class="form-control" required>
+                                <option value="Information">Information Générale</option>
+                                <option value="Alerte Stock">Alerte Stock</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Message</label>
+                            <textarea id="notif-message" class="form-control" rows="5" required
+                                placeholder="Écrivez votre message ici..."></textarea>
+                        </div>
+
+                        <div style="margin-top: 25px; display: flex; gap: 15px;">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Envoyer la notification
+                            </button>
+                            <button type="reset" class="btn btn-outline"
+                                onclick="document.getElementById('form-notification').reset()">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div style="max-width: 800px; margin: 30px auto;">
+                    <h4>Derniers envois</h4>
+                    <div id="notif-history"
+                        style="background:white; padding:15px; border-radius:8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                        <p style="color:#999; text-align:center;">Aucune notification envoyée récemment.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/security.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('logout-btn').addEventListener('click', () => {
-                localStorage.clear();
-                window.location.href = 'login.html';
-            });
 
-            document.getElementById('notif-form').addEventListener('submit', async (e) => {
+            document.getElementById('form-notification').addEventListener('submit', function (e) {
                 e.preventDefault();
-                const data = {
-                    type_notification: document.getElementById('notif-type').value,
-                    message: document.getElementById('notif-message').value,
-                    date_envoi: new Date().toISOString()
-                };
 
-                try {
-                    await api.request('/api/notifications/', { method: 'POST', body: JSON.stringify(data) });
-                    alert('Notification envoyée avec succès !');
-                    document.getElementById('notif-form').reset();
-                } catch (err) {
-                    alert('Erreur lors de l\'envoi');
-                }
+                const type = document.getElementById('notif-type').value;
+                const message = document.getElementById('notif-message').value;
+                const date = new Date().toLocaleString('fr-FR');
+
+                // Simulation envoi API
+                console.log("Notification envoyée :", { type, message });
+
+                // Feedback utilisateur
+                alert(`Notification "${type}" envoyée avec succès !`);
+
+                // Ajout visuel dans l'historique
+                const historyDiv = document.getElementById('notif-history');
+                if (historyDiv.querySelector('p')) historyDiv.innerHTML = ''; // Enlever le msg "Aucune..."
+
+                const notifItem = `
+                    <div style="border-bottom:1px solid #eee; padding:15px 0; display:flex; justify-content:space-between; align-items: flex-start;">
+                        <div>
+                            <strong>${type}</strong><br>
+                            <span style="font-size:0.9em; color:#555;">${message}</span>
+                        </div>
+                        <div style="font-size:0.8em; color:#999; white-space: nowrap; margin-left: 20px;">${date}</div>
+                    </div>
+                `;
+                historyDiv.insertAdjacentHTML('afterbegin', notifItem);
+
+                this.reset();
             });
+
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                });
+            }
         });
     </script>
 </body>

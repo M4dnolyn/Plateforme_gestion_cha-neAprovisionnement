@@ -15,3 +15,4 @@ class LivraisonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Livraison
         fields = '__all__'
+

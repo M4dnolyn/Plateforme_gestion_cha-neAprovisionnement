@@ -13,21 +13,21 @@ class AdminStatsView(APIView):
         # Vérifier si l'utilisateur est admin
         try:
             user_email = request.user.email
-            utilisateur = Utilisateur.objects.using('postgres').get(email=user_email)
+            utilisateur = Utilisateur.objects.get(email=user_email)
             if utilisateur.role.upper() != 'ADMIN':
                 return Response({'error': 'Permission refusée'}, status=status.HTTP_403_FORBIDDEN)
         except Utilisateur.DoesNotExist:
             return Response({'error': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
 
         # Calculer les stats
-        total_users = Utilisateur.objects.using('postgres').count()
-        total_products = Produit.objects.using('postgres').count()
+        total_users = Utilisateur.objects.count()
+        total_products = Produit.objects.count()
         
         # Stocks critiques (quantité < 20 par exemple) - Seuil arbitraire pour la démo
-        critical_stocks_count = Lot.objects.using('postgres').filter(quantite__lt=20, statut_lot='STOCK').count()
+        critical_stocks_count = Lot.objects.filter(quantite__lt=20, statut_lot='STOCK').count()
         
         # Répartition par rôle
-        roles_distribution = Utilisateur.objects.using('postgres').values('role').annotate(count=Count('id_utilisateur'))
+        roles_distribution = Utilisateur.objects.values('role').annotate(count=Count('id_utilisateur'))
         
         return Response({
             'total_users': total_users,

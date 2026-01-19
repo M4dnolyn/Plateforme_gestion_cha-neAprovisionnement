@@ -91,41 +91,7 @@
 
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            loadIncidents(); loadDeliveries();
-            document.getElementById('incident-form').addEventListener('submit', createIncident);
-        });
-        async function loadDeliveries() {
-            const deliveries = await api.getDeliveries();
-            const select = document.getElementById('inc-del');
-            select.innerHTML = '<option value="">Aucune</option>' + deliveries.map(d => `<option value="${d.id_livraison}">Livraison #${d.id_livraison} - ${d.destination}</option>`).join('');
-        }
-        async function loadIncidents() {
-            const incidents = await api.request('/api/incidents/');
-            const tbody = document.getElementById('incidents-body');
-            tbody.innerHTML = (incidents || []).map(i => `
-                <tr>
-                    <td>#${i.id_incident}</td>
-                    <td>${i.type_incident}</td>
-                    <td>${new Date(i.date_incident).toLocaleString()}</td>
-                    <td><span class="badge ${i.statut === 'Ouvert' ? 'status-pending' : 'status-ok'}">${i.statut}</span></td>
-                    <td>${i.id_livraison || 'Global'}</td>
-                </tr>
-            `).join('');
-        }
-        async function createIncident(e) {
-            e.preventDefault();
-            const data = {
-                type_incident: document.getElementById('inc-type').value,
-                description: document.getElementById('inc-desc').value,
-                id_livraison: document.getElementById('inc-del').value || null
-            };
-            await api.request('/api/incidents/', { method: 'POST', body: JSON.stringify(data) });
-            alert('Incident signalé !');
-            loadIncidents();
-        }
-    </script>
+    <script src="js/incidents.js"></script>
 </body>
 
 </html>

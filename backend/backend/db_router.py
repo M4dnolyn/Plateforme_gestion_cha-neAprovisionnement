@@ -22,9 +22,14 @@ class DatabaseRouter:
         'auth',          # CONTIENT User, Group, Permission
         'contenttypes',
         'sessions',
-        'users',         # Votre app users (DOIT être avec auth dans SQLite)
         'authtoken',     # REST Framework Token
     ]
+    
+    # App users contient à la fois:
+    # - Django User (dans SQLite via auth)
+    # - Utilisateur métier (dans PostgreSQL)
+    # Le modèle Utilisateur ira dans PostgreSQL
+    postgres_apps = postgres_apps + ['users']
     
     def db_for_read(self, model, **hints):
         """Détermine quelle base utiliser pour la lecture."""

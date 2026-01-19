@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
 
   if (loginForm) {
+    // Toujours nettoyer le local storage au chargement de la page de login
+    localStorage.clear();
+    console.log("Session cleared for fresh login");
+
     loginForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
@@ -65,16 +69,17 @@ async function authenticateUser(email, password, role) {
         localStorage.setItem("token", result.tokens.token);
       }
 
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userRole", role);
-      localStorage.setItem("userName", email.split("@")[0]);
+      // Stocker les informations utilisateur depuis l'API (pas depuis le formulaire)
+      localStorage.setItem("userEmail", userData.email);
+      localStorage.setItem("userRole", userData.role);  // Utiliser le rôle de l'API
+      localStorage.setItem("userName", userData.nom || email.split("@")[0]);
       localStorage.setItem("userData", JSON.stringify(userData));
 
       showAlert("✅ Connexion réussie ! Redirection...", "success");
 
-      // Rediriger vers le dashboard approprié
+      // Rediriger vers le dashboard approprié en utilisant le rôle de l'API
       setTimeout(() => {
-        redirectToDashboard(role);
+        redirectToDashboard(userData.role);
       }, 1500);
     } else {
       throw new Error(result.error || "Échec de l'authentification");
@@ -243,17 +248,7 @@ function logout() {
   }
 }
 
-// Tester la connexion API au démarrage
-window.addEventListener("load", () => {
-  // Optionnel: Tester si l'API est disponible
-  fetch("http://localhost:8000/api/token/", { method: "OPTIONS" })
-    .then(() => {
-      console.log("✅ API Django disponible");
-    })
-    .catch(() => {
-      console.warn("⚠️ API Django non disponible");
-    });
-});
+// Initialisation terminée
 
 // Exporter pour une utilisation globale
 window.auth = {

@@ -18,11 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
 function initLogoutButton() {
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', function () {
-            if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
-                localStorage.clear();
-                window.location.href = 'login.html';
-            }
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            logout();
         });
     }
 }
@@ -38,18 +36,6 @@ function updateUserInfo() {
 function setupForm() {
     const form = document.getElementById('employeForm');
     if (form) {
-        // Ajouter un champ mot de passe si manquant
-        const emailGroup = document.getElementById('email').closest('.form-group');
-        if (emailGroup && !document.getElementById('mot_de_passe')) {
-            const pwdGroup = document.createElement('div');
-            pwdGroup.className = 'form-group';
-            pwdGroup.innerHTML = `
-                <label for="mot_de_passe" class="form-label">Mot de passe temporaire *</label>
-                <input type="password" id="mot_de_passe" class="form-control" required placeholder="Générer un mot de passe">
-            `;
-            emailGroup.after(pwdGroup);
-        }
-
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             creerEmploye();
@@ -143,7 +129,12 @@ function displayEmployes(employes) {
     const tbody = document.getElementById('employes-table-body');
     if (!tbody) return;
 
-    if (!employes || employes.length === 0) {
+    let employesList = employes;
+    if (employes.results) {
+        employesList = employes.results;
+    }
+
+    if (!employesList || employesList.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
@@ -156,7 +147,7 @@ function displayEmployes(employes) {
 
     let html = '';
 
-    employes.forEach(employe => {
+    employesList.forEach(employe => {
         const id = employe.id_utilisateur;
         const statut = employe.statut || 'actif';
         const statusClass = statut === 'actif' ? 'status-active' : 'status-inactive';
@@ -175,6 +166,9 @@ function displayEmployes(employes) {
                         <button class="action-btn btn-view" onclick="voirEmploye(${id})" title="Voir détails">
                             <i class="fas fa-eye"></i>
                         </button>
+                        <button class="action-btn btn-warning" onclick="reinitialiserMotDePasse(${id})" title="Réinitialiser MDP" style="background: #f1c40f; color: white;">
+                            <i class="fas fa-key"></i>
+                        </button>
                         <button class="action-btn btn-delete" onclick="supprimerEmploye(${id})" title="Supprimer">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -188,17 +182,22 @@ function displayEmployes(employes) {
 }
 
 function updateStats(employes) {
+    let employesList = employes;
+    if (employes.results) {
+        employesList = employes.results;
+    }
+
     // Compter les statistiques
-    const total = employes.length;
-    const actifs = employes.filter(e => e.statut === 'actif').length;
-    const roles = [...new Set(employes.map(e => e.role))].length;
+    const total = employesList.length;
+    const actifs = employesList.filter(e => e.statut === 'actif').length;
+    const roles = [...new Set(employesList.map(e => e.role))].length;
 
     // Compter les nouveaux employés du mois
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
 
-    const nouveauxMois = employes.filter(e => {
+    const nouveauxMois = employesList.filter(e => {
         if (!e.date_creation) return false;
         const date = new Date(e.date_creation);
         return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
@@ -257,6 +256,22 @@ async function voirEmploye(id) {
 
 function editerEmploye(id) {
     showNotification('✏️ Fonctionnalité d\'édition à venir', 'info');
+}
+
+async function reinitialiserMotDePasse(id) {
+    const nouveauPwd = prompt("Saisissez le nouveau mot de passe temporaire :");
+    if (!nouveauPwd) return;
+
+    try {
+        await api.request(`/api/utilisateurs/${id}/`, {
+            method: 'PATCH',
+            body: JSON.stringify({ mot_de_passe: nouveauPwd })
+        });
+        showNotification('🔑 Mot de passe réinitialisé avec succès', 'success');
+    } catch (error) {
+        console.error('Erreur réinitialisation:', error);
+        showNotification('❌ Erreur lors de la réinitialisation', 'error');
+    }
 }
 
 async function supprimerEmploye(id) {
@@ -376,4 +391,5 @@ function showNotification(message, type = 'info') {
 window.creerCompteEmploye = creerCompteEmploye;
 window.voirEmploye = voirEmploye;
 window.editerEmploye = editerEmploye;
+window.reinitialiserMotDePasse = reinitialiserMotDePasse;
 window.supprimerEmploye = supprimerEmploye;

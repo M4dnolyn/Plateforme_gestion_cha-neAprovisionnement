@@ -4,6 +4,6 @@ from .serializers import UtilisateurSerializer
 from .permissions import IsAdminUser
 
 class UtilisateurViewSet(viewsets.ModelViewSet):
-    queryset = Utilisateur.objects.using('postgres').all()
+    queryset = Utilisateur.objects.all()
     serializer_class = UtilisateurSerializer
     permission_classes = [IsAdminUser]

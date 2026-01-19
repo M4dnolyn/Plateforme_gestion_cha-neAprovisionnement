@@ -96,8 +96,8 @@
             <div class="products-grid">
                 <!-- Crevettes -->
                 <div class="product-card">
-                    <div class="image-placeholder">
-                        <i class="fas fa-shrimp"></i>
+                    <div class="image-placeholder" style="padding:0; overflow:hidden;">
+                        <img src="img/crevettes.png" alt="Crevettes" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">
@@ -107,7 +107,7 @@
                         <div class="product-details">
                             <div class="detail-item">
                                 <div class="detail-label">Prix/kg</div>
-                                <div class="detail-value">₣ 8.500</div>
+                                <div class="detail-value">8.500 CFA</div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Disponible</div>
@@ -131,8 +131,8 @@
 
                 <!-- Crabes -->
                 <div class="product-card">
-                    <div class="image-placeholder">
-                        <i class="fas fa-crab"></i>
+                    <div class="image-placeholder" style="padding:0; overflow:hidden;">
+                        <img src="img/crabes.png" alt="Crabes" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">
@@ -142,7 +142,7 @@
                         <div class="product-details">
                             <div class="detail-item">
                                 <div class="detail-label">Prix/kg</div>
-                                <div class="detail-value">₣ 12.000</div>
+                                <div class="detail-value">12.000 CFA</div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Disponible</div>
@@ -163,41 +163,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Langouste -->
-                <div class="product-card">
-                    <div class="image-placeholder">
-                        <i class="fas fa-fish"></i>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">
-                            <i class="fas fa-fish"></i> Langouste
-                        </h3>
-                        <p>Langouste de roche, produit de luxe pour occasions spéciales.</p>
-                        <div class="product-details">
-                            <div class="detail-item">
-                                <div class="detail-label">Prix/kg</div>
-                                <div class="detail-value">₣ 45.000</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Disponible</div>
-                                <div class="detail-value">25 kg</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Qualité</div>
-                                <div class="detail-value">A++</div>
-                            </div>
-                        </div>
-                        <div class="product-actions">
-                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Langouste')">
-                                <i class="fas fa-cart-plus"></i> Stock
-                            </button>
-                            <button class="action-btn btn-details" onclick="voirDetails('Langouste')">
-                                <i class="fas fa-info"></i> Détails
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -205,10 +170,10 @@
         <div class="category-section" data-category="poissons_mer">
             <h2 class="category-title"><i class="fas fa-water"></i> Poissons de mer</h2>
             <div class="products-grid">
-                <!-- Thon -->
+                <!-- Thon (Poisson 5) -->
                 <div class="product-card">
-                    <div class="image-placeholder">
-                        <i class="fas fa-fish"></i>
+                    <div class="image-placeholder" style="padding:0; overflow:hidden;">
+                        <img src="img/poisson_5.jpg" alt="Thon" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">
@@ -218,7 +183,7 @@
                         <div class="product-details">
                             <div class="detail-item">
                                 <div class="detail-label">Prix/kg</div>
-                                <div class="detail-value">₣ 15.000</div>
+                                <div class="detail-value">15.000 CFA</div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Disponible</div>
@@ -240,20 +205,20 @@
                     </div>
                 </div>
 
-                <!-- Dorade -->
+                <!-- Saumon (remplace Dorade - Poisson 4) -->
                 <div class="product-card">
-                    <div class="image-placeholder">
-                        <i class="fas fa-fish"></i>
+                    <div class="image-placeholder" style="padding:0; overflow:hidden;">
+                        <img src="img/poisson_4.jpg" alt="Saumon" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">
-                            <i class="fas fa-fish"></i> Dorade
+                            <i class="fas fa-fish"></i> Saumon
                         </h3>
-                        <p>Dorade royale, poisson noble parfait pour four ou grill.</p>
+                        <p>Saumon de qualité supérieure, riche en oméga-3.</p>
                         <div class="product-details">
                             <div class="detail-item">
                                 <div class="detail-label">Prix/kg</div>
-                                <div class="detail-value">₣ 18.000</div>
+                                <div class="detail-value">22.000 CFA</div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Disponible</div>
@@ -261,14 +226,49 @@
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Qualité</div>
-                                <div class="detail-value">A+</div>
+                                <div class="detail-value">Premium</div>
                             </div>
                         </div>
                         <div class="product-actions">
-                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Dorade')">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Saumon')">
                                 <i class="fas fa-cart-plus"></i> Stock
                             </button>
-                            <button class="action-btn btn-details" onclick="voirDetails('Dorade')">
+                            <button class="action-btn btn-details" onclick="voirDetails('Saumon')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sardine (Nouveau - Poisson 1) -->
+                <div class="product-card">
+                    <div class="image-placeholder" style="padding:0; overflow:hidden;">
+                        <img src="img/poisson_1.jpg" alt="Sardines" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-fish"></i> Sardines
+                        </h3>
+                        <p>Sardines fraîches, excellentes pour la friture.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">2.500 CFA</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">200 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Sardines')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Sardines')">
                                 <i class="fas fa-info"></i> Détails
                             </button>
                         </div>
@@ -281,10 +281,10 @@
         <div class="category-section" data-category="poissons_douce">
             <h2 class="category-title"><i class="fas fa-tint"></i> Poissons d'eau douce</h2>
             <div class="products-grid">
-                <!-- Tilapia -->
+                <!-- Tilapia (Poisson 2) -->
                 <div class="product-card">
-                    <div class="image-placeholder">
-                        <i class="fas fa-fish"></i>
+                    <div class="image-placeholder" style="padding:0; overflow:hidden;">
+                        <img src="img/poisson_2.jpg" alt="Tilapia" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">
@@ -294,7 +294,7 @@
                         <div class="product-details">
                             <div class="detail-item">
                                 <div class="detail-label">Prix/kg</div>
-                                <div class="detail-value">₣ 6.500</div>
+                                <div class="detail-value">6.500 CFA</div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Disponible</div>
@@ -310,6 +310,41 @@
                                 <i class="fas fa-cart-plus"></i> Stock
                             </button>
                             <button class="action-btn btn-details" onclick="voirDetails('Tilapia')">
+                                <i class="fas fa-info"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silure (Nouveau - Poisson 3) -->
+                <div class="product-card">
+                    <div class="image-placeholder" style="padding:0; overflow:hidden;">
+                        <img src="img/poisson_3.jpg" alt="Silure" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <i class="fas fa-fish"></i> Silure
+                        </h3>
+                        <p>Silure frais, chair tendre et savoureuse.</p>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Prix/kg</div>
+                                <div class="detail-value">4.000 CFA</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Disponible</div>
+                                <div class="detail-value">150 kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualité</div>
+                                <div class="detail-value">A</div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-btn btn-stock" onclick="ajouterAuStock('Silure')">
+                                <i class="fas fa-cart-plus"></i> Stock
+                            </button>
+                            <button class="action-btn btn-details" onclick="voirDetails('Silure')">
                                 <i class="fas fa-info"></i> Détails
                             </button>
                         </div>

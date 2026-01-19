@@ -60,39 +60,58 @@ async function loadStockData() {
 }
 
 function updateStockHistory(lots) {
-    const container = document.getElementById('stock-history-body');
-    if (!container) return;
+    const tbody = document.getElementById('stock-history-body');
+    if (!tbody) return;
 
-    if (!lots || lots.length === 0) {
-        container.innerHTML = '<tr><td colspan="6" class="no-data">Aucun lot dans l\'historique</td></tr>';
+    let lotsList = lots;
+    if (lots && lots.results) {
+        lotsList = lots.results;
+    }
+
+    if (!lotsList || lotsList.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 30px; color: #aaa;">
+                    <i class="fas fa-box-open"></i> Aucun lot en stock
+                </td>
+            </tr>
+        `;
         return;
     }
 
     let html = '';
-    lots.forEach(lot => {
-        const dispo = lot.quantite > 0 ?
-            '<span class="badge status-ok">OUI</span>' :
-            '<span class="badge status-pending">NON</span>';
+
+    lotsList.forEach(lot => {
+        const dateEntree = new Date(lot.date_reception).toLocaleDateString('fr-FR');
+        const statutClass = lot.statut_lot === 'STOCK' ? 'status-ok' : 'status-warning';
+
+        // Sécuriser les valeurs nulles
+        const nomProduit = lot.nom_produit || 'Produit Inconnu';
+        const typeProduit = lot.type_produit || 'Standard';
 
         html += `
             <tr>
                 <td><strong>#${lot.id_lot}</strong></td>
-                <td>${lot.type_produit || 'Divers'}</td>
-                <td><strong>${lot.quantite} kg</strong></td>
-                <td>${new Date(lot.date_reception).toLocaleDateString('fr-FR')}</td>
-                <td>${dispo}</td>
                 <td>
-                    <button class="btn-sm btn-outline btn-modifier" onclick="window.location.href='formulaire_stock.html?id=${lot.id_lot}'" title="Modifier">
+                    <div style="font-weight:600;">${nomProduit}</div>
+                    <div style="font-size:0.85em; color:#666;">${typeProduit}</div>
+                </td>
+                <td>${lot.quantite} kg</td>
+                <td>${dateEntree}</td>
+                <td><span class="status-badge ${statutClass}">${lot.statut_lot}</span></td>
+                <td>
+                    <button class="btn-icon btn-modifier" onclick="modifierValeur('${lot.id_lot}')" title="Modifier">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn-sm btn-outline btn-supprimer" onclick="supprimerLot(${lot.id_lot})" title="Supprimer">
+                    <button class="btn-icon btn-supprimer" onclick="supprimerLot('${lot.id_lot}')" title="Supprimer" style="color:#e74c3c;">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
             </tr>
         `;
     });
-    container.innerHTML = html;
+
+    tbody.innerHTML = html;
 }
 
 function updateDailyInventory(stats) {
@@ -316,4 +335,3 @@ function showNotification(message, type = 'info') {
 
 // Exporter les fonctions
 window.modifierValeur = modifierValeur;
-window.logout = logout;

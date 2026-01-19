@@ -1,8 +1,8 @@
 // api.js - Communication avec l'API Django
 
 const API_CONFIG = {
-    BASE_URL: 'http://localhost:8000',
-    TIMEOUT: 10000,
+    BASE_URL: 'http://127.0.0.1:8000',
+    TIMEOUT: 30000,
     ENDPOINTS: {
         // Authentification
         LOGIN: '/api/users/login/',
@@ -41,8 +41,8 @@ const API_CONFIG = {
 
 class API {
     constructor() {
-        this.token = localStorage.getItem('token');
-        this.refreshToken = localStorage.getItem('refreshToken');
+        this.token = localStorage.getItem('access_token') || localStorage.getItem('token');
+        this.refreshToken = localStorage.getItem('refresh_token') || localStorage.getItem('refreshToken');
     }
 
     // Méthode générique pour les requêtes
@@ -78,8 +78,8 @@ class API {
 
             // Gérer les réponses non-OK
             if (!response.ok) {
-                // Tentative de refresh token si 401
-                if (response.status === 401 && this.refreshToken && !endpoint.includes('/auth/refresh/')) {
+                // Tentative de refresh token si 401 (mais pas pour les endpoints d'auth eux-mêmes)
+                if (response.status === 401 && this.refreshToken && !isAuthEndpoint) {
                     const refreshed = await this.refreshAccessToken();
                     if (refreshed) {
                         // Réessayer la requête avec le nouveau token
@@ -204,8 +204,10 @@ class API {
         this.token = accessToken;
         this.refreshToken = refreshToken;
 
-        localStorage.setItem('token', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('token', accessToken);  // Backward compatibility
+        localStorage.setItem('refresh_token', refreshToken);
+        localStorage.setItem('refreshToken', refreshToken);  // Backward compatibility
 
         // Stocker l'expiration (1 heure par défaut)
         const expiry = new Date();
@@ -218,7 +220,9 @@ class API {
         this.refreshToken = null;
 
         localStorage.removeItem('token');
+        localStorage.removeItem('access_token');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('refresh_token');
         localStorage.removeItem('tokenExpiry');
         localStorage.removeItem('userData');
     }

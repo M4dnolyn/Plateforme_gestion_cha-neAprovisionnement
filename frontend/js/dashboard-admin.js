@@ -27,7 +27,10 @@ function initDashboard() {
     });
 
     // Toggle sidebar
-    document.getElementById('toggle-sidebar').addEventListener('click', toggleSidebar);
+    const toggleBtn = document.getElementById('toggle-sidebar');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleSidebar);
+    }
 }
 
 function setupEventListeners() {

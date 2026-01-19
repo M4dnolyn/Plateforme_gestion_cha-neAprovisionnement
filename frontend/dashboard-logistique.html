@@ -17,36 +17,49 @@
     <div class="dashboard">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo"><i class="fas fa-truck"></i>
-                    <h2>Mokpokpo Log.</h2>
+                <div class="logo">
+                    <img src="img/uploaded_image_2_1768806254893.jpg" alt="Logo"
+                        style="width:40px;height:40px;border-radius:50%;margin-right:10px;">
+                    <i class="fas fa-shipping-fast" style="display:none;"></i>
+                    <h1>Mokpokpo Logistique</h1>
                 </div>
             </div>
             <nav class="sidebar-menu">
-                <a href="dashboard-logistique.html" class="menu-item active"><i
-                        class="fas fa-tachometer-alt menu-icon"></i> <span>Tableau de bord</span></a>
-                <a href="livraisons.html" class="menu-item"><i class="fas fa-calendar-alt menu-icon"></i>
-                    <span>Planification</span></a>
-                <a href="livraisons.html?view=suivi" class="menu-item"><i class="fas fa-route menu-icon"></i>
-                    <span>Suivi</span></a>
-                <a href="incidents.html" class="menu-item"><i class="fas fa-exclamation-triangle menu-icon"></i>
-                    <span>Incidents</span></a>
-                <a href="notifications.html" class="menu-item"><i class="fas fa-envelope menu-icon"></i>
-                    <span>Notifications</span></a>
+                <a href="dashboard-logistique.html" class="menu-item active">
+                    <i class="fas fa-tachometer-alt menu-icon"></i>
+                    <span>Tableau de bord</span>
+                </a>
+                <a href="livraisons.html" class="menu-item">
+                    <i class="fas fa-calendar-alt menu-icon"></i>
+                    <span>Planification</span>
+                </a>
+                <a href="livraisons.html?view=suivi" class="menu-item">
+                    <i class="fas fa-route menu-icon"></i>
+                    <span>Suivi</span>
+                </a>
+                <a href="incidents.html" class="menu-item">
+                    <i class="fas fa-exclamation-triangle menu-icon"></i>
+                    <span>Incidents</span>
+                </a>
+                <a href="notifications.html" class="menu-item">
+                    <i class="fas fa-envelope menu-icon"></i>
+                    <span>Notifications</span>
+                </a>
                 <div class="menu-spacer"></div>
-                <a href="#" class="menu-item logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt menu-icon"></i>
-                    <span>Déconnexion</span></a>
+                <a href="#" class="menu-item logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt menu-icon"></i>
+                    <span>Déconnexion</span>
+                </a>
             </nav>
         </aside>
 
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-title">
-                    <h1>Vue générale logistique</h1>
+                    <h1><i class="fas fa-truck"></i> Vue générale logistique</h1>
                 </div>
                 <div class="user-info">
-                    <div class="user-details">
-                        <div class="user-name">Gestionnaire Logistique</div>
-                    </div>
+                    <span id="current-user">Gestionnaire Logistique</span>
                 </div>
             </header>
 
